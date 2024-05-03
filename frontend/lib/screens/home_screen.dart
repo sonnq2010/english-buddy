@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/service/service.dart';
 import 'package:frontend/widgets/camera.dart';
+import 'package:frontend/widgets/chat_box.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -39,7 +40,7 @@ class HomeScreen extends StatelessWidget {
             child: Placeholder(),
           ),
           Expanded(
-            child: Placeholder(),
+            child: ChatBox(),
           ),
         ],
       ),
