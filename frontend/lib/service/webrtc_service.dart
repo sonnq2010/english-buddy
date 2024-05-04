@@ -24,7 +24,7 @@ class WebRTCService {
     myMediaStream = mediaStream;
     myVideoRenderer.srcObject = mediaStream;
 
-    otherMediaStream = mediaStream;
-    otherVideoRenderer.srcObject = mediaStream;
+    // otherMediaStream = mediaStream;
+    // otherVideoRenderer.srcObject = mediaStream;
   }
 }

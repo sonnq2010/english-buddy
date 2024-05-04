@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/screens/home_screen.dart';
-import 'package:frontend/service/service.dart';
+import 'package:frontend/service/webrtc_service.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();

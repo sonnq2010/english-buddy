@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/service/service.dart';
-import 'package:frontend/widgets/camera.dart';
+import 'package:frontend/service/webrtc_service.dart';
 import 'package:frontend/widgets/chat_box.dart';
+import 'package:frontend/widgets/video_view.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
