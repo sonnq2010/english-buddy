@@ -30,11 +30,14 @@ class _ChatBoxState extends State<ChatBox> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        _buildMessageList(),
-        _buildTextField(),
-      ],
+    return Container(
+      decoration: BoxDecoration(border: Border.all()),
+      child: Column(
+        children: [
+          _buildMessageList(),
+          _buildTextField(),
+        ],
+      ),
     );
   }
 

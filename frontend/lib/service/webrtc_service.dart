@@ -27,4 +27,13 @@ class WebRTCService {
     // otherMediaStream = mediaStream;
     // otherVideoRenderer.srcObject = mediaStream;
   }
+
+  Future<void> start() async {
+    await Future.delayed(const Duration(seconds: 1));
+  }
+
+  Future<void> next() async {}
+  Future<void> pause() async {
+    await Future.delayed(const Duration(seconds: 1));
+  }
 }

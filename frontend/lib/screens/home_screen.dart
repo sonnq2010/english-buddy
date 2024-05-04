@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/service/webrtc_service.dart';
 import 'package:frontend/widgets/chat_box.dart';
+import 'package:frontend/widgets/control_buttons_and_filters.dart';
 import 'package:frontend/widgets/video_view.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -17,7 +18,7 @@ class HomeScreen extends StatelessWidget {
 
   Widget _buildCameras() {
     return Expanded(
-      flex: 7,
+      flex: 13,
       child: Row(
         children: [
           Expanded(
@@ -33,11 +34,11 @@ class HomeScreen extends StatelessWidget {
 
   Widget _buildFilterAndChat() {
     return const Expanded(
-      flex: 3,
+      flex: 7,
       child: Row(
         children: [
           Expanded(
-            child: Placeholder(),
+            child: ControllButtonsAndFilters(),
           ),
           Expanded(
             child: ChatBox(),
