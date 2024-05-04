@@ -44,6 +44,7 @@ class _ChatBoxState extends State<ChatBox> {
   Widget _buildMessageList() {
     return Expanded(
       child: ListView.separated(
+        reverse: true,
         padding: const EdgeInsets.all(16),
         controller: _scrollController,
         itemCount: _messages.length,
@@ -119,11 +120,12 @@ class _ChatBoxState extends State<ChatBox> {
         _textController.clear();
         _focusNode.requestFocus();
         setState(() {
-          _messages.add(
+          _messages.insert(
+            0,
             Message(content: value, isMe: true),
           );
         });
-        _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+        _scrollController.jumpTo(0);
       },
     );
   }
