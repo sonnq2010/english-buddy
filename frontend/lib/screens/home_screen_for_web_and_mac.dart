@@ -4,8 +4,8 @@ import 'package:frontend/widgets/chat_box.dart';
 import 'package:frontend/widgets/control_buttons_and_filters.dart';
 import 'package:frontend/widgets/video_view.dart';
 
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+class HomeScreenForWebAndMac extends StatelessWidget {
+  const HomeScreenForWebAndMac({super.key});
 
   @override
   Widget build(BuildContext context) {
