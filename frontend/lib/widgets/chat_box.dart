@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
-
-class Message {
-  const Message({required this.content, required this.isMe});
-
-  final String content;
-  final bool isMe;
-}
+import 'package:frontend/models/message.dart';
+import 'package:frontend/service/chat_service.dart';
 
 class ChatBox extends StatefulWidget {
-  const ChatBox({super.key});
+  const ChatBox({super.key, this.forBottomSheet = false});
+
+  final bool forBottomSheet;
 
   @override
   State<ChatBox> createState() => _ChatBoxState();
@@ -22,6 +19,12 @@ class _ChatBoxState extends State<ChatBox> {
   final _scrollController = ScrollController();
 
   @override
+  void initState() {
+    super.initState();
+    _messages.addAll(ChatService.I.messages);
+  }
+
+  @override
   void dispose() {
     super.dispose();
     _textController.dispose();
@@ -31,7 +34,8 @@ class _ChatBoxState extends State<ChatBox> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(border: Border.all()),
+      decoration:
+          widget.forBottomSheet ? null : BoxDecoration(border: Border.all()),
       child: Column(
         children: [
           _buildMessageList(),
@@ -108,25 +112,34 @@ class _ChatBoxState extends State<ChatBox> {
     return TextField(
       controller: _textController,
       focusNode: _focusNode,
-      decoration: const InputDecoration(
-        border: OutlineInputBorder(),
+      decoration: InputDecoration(
+        border: const OutlineInputBorder(),
         hintText: 'Enter your message...',
-        contentPadding: EdgeInsets.symmetric(horizontal: 8),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 8),
+        suffixIcon: IconButton(
+          onPressed: () {
+            _submit(_textController.text);
+          },
+          icon: const Icon(Icons.send_outlined),
+        ),
       ),
-      onSubmitted: (value) {
-        value = value.trim();
-        if (value.isEmpty) return;
-
-        _textController.clear();
-        _focusNode.requestFocus();
-        setState(() {
-          _messages.insert(
-            0,
-            Message(content: value, isMe: true),
-          );
-        });
-        _scrollController.jumpTo(0);
-      },
+      onSubmitted: _submit,
     );
+  }
+
+  void _submit(String message) {
+    message = message.trim();
+    if (message.isEmpty) return;
+
+    _textController.clear();
+    _focusNode.requestFocus();
+    setState(() {
+      _messages.insert(
+        0,
+        Message(content: message, isMe: true),
+      );
+    });
+    ChatService.I.submit(message);
+    _scrollController.jumpTo(0);
   }
 }
