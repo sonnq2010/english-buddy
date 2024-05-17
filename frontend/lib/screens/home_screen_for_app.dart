@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/service/report_service.dart';
 import 'package:frontend/service/webrtc_service.dart';
 import 'package:frontend/widgets/chat_box.dart';
 import 'package:frontend/widgets/filter_bottom_sheet.dart';
@@ -66,7 +67,24 @@ class HomeScreenForApp extends StatelessWidget {
       child: Column(
         children: [
           Expanded(
-            child: VideoView(videoRenderer: WebRTCService.I.otherVideoRenderer),
+            child: Stack(
+              children: [
+                VideoView(
+                  videoRenderer: WebRTCService.I.otherVideoRenderer,
+                ),
+                Positioned(
+                  top: 0,
+                  right: 0,
+                  child: IconButton(
+                    style: IconButton.styleFrom(
+                      backgroundColor: Colors.deepPurpleAccent.withOpacity(0.2),
+                    ),
+                    onPressed: ReportService.I.reportUser,
+                    icon: const Icon(Icons.report_outlined, size: 30),
+                  ),
+                ),
+              ],
+            ),
           ),
           Expanded(
             child: VideoView(videoRenderer: WebRTCService.I.myVideoRenderer),

@@ -1,6 +1,5 @@
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 
-// Singleton
 class WebRTCService {
   WebRTCService._singleton();
   static final WebRTCService _instance = WebRTCService._singleton();

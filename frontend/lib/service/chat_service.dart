@@ -1,4 +1,3 @@
-// Singleton
 import 'package:frontend/models/message.dart';
 
 class ChatService {
