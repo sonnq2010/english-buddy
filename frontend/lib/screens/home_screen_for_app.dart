@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/service/report_service.dart';
-import 'package:frontend/service/webrtc_service.dart';
 import 'package:frontend/widgets/chat_box.dart';
 import 'package:frontend/widgets/filter_bottom_sheet.dart';
-import 'package:frontend/widgets/video_view.dart';
+import 'package:frontend/widgets/video_view/my_video_view.dart';
+import 'package:frontend/widgets/video_view/other_video_view.dart';
 
 class HomeScreenForApp extends StatelessWidget {
   const HomeScreenForApp({super.key});
@@ -69,9 +69,7 @@ class HomeScreenForApp extends StatelessWidget {
           Expanded(
             child: Stack(
               children: [
-                VideoView(
-                  videoRenderer: WebRTCService.I.otherVideoRenderer,
-                ),
+                const OtherVideoView(),
                 Positioned(
                   top: 0,
                   right: 0,
@@ -86,8 +84,8 @@ class HomeScreenForApp extends StatelessWidget {
               ],
             ),
           ),
-          Expanded(
-            child: VideoView(videoRenderer: WebRTCService.I.myVideoRenderer),
+          const Expanded(
+            child: MyVideoView(),
           ),
         ],
       ),
