@@ -11,7 +11,7 @@ class VideoView extends StatelessWidget {
     return RTCVideoView(
       videoRenderer,
       mirror: true,
-      filterQuality: FilterQuality.high,
+      filterQuality: FilterQuality.low,
       objectFit: RTCVideoViewObjectFit.RTCVideoViewObjectFitCover,
     );
   }

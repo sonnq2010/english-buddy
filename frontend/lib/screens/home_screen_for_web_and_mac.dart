@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/service/webrtc_service.dart';
 import 'package:frontend/widgets/chat_box.dart';
 import 'package:frontend/widgets/control_buttons_and_filters.dart';
-import 'package:frontend/widgets/video_view.dart';
+import 'package:frontend/widgets/video_view/my_video_view.dart';
+import 'package:frontend/widgets/video_view/other_video_view.dart';
 
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+class HomeScreenForWebAndMac extends StatelessWidget {
+  const HomeScreenForWebAndMac({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -17,15 +17,15 @@ class HomeScreen extends StatelessWidget {
   }
 
   Widget _buildCameras() {
-    return Expanded(
+    return const Expanded(
       flex: 13,
       child: Row(
         children: [
           Expanded(
-            child: VideoView(videoRenderer: WebRTCService.I.myVideoRenderer),
+            child: OtherVideoView(),
           ),
           Expanded(
-            child: VideoView(videoRenderer: WebRTCService.I.otherVideoRenderer),
+            child: MyVideoView(),
           ),
         ],
       ),
