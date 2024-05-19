@@ -10,13 +10,13 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (Platform.isAndroid) {
+    if (kIsWeb) {
+      return const HomeScreenForWebAndMac();
+    } else if (Platform.isAndroid) {
       return const HomeScreenForApp();
     } else if (Platform.isIOS) {
       return const HomeScreenForApp();
     } else if (Platform.isMacOS) {
-      return const HomeScreenForWebAndMac();
-    } else if (kIsWeb) {
       return const HomeScreenForWebAndMac();
     }
 
