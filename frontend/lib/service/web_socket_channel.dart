@@ -14,8 +14,8 @@ class WebSocketService {
     final channel = WebSocketChannel.connect(_channelUri);
     await channel.ready;
 
-    channel.stream.listen((message) {
-      print(message);
-    });
+    channel.stream.listen((message) {});
   }
+
+  void test() {}
 }

@@ -14,11 +14,11 @@ export class GatewayService implements OnGatewayInit, OnGatewayConnection, OnGat
 
   handleConnection(client: WebSocket) {
     this.logger.log('Client connected');
+    client.send(JSON.stringify({type: 'text', data: 'Welcome to the WebSocket server!'}));
+
     client.on('message', (message: string) => {
-        this.logger.log('WTH');
       this.handleMessage(client, message);
     });
-    client.send(JSON.stringify({type: 'text', data: 'Welcome to the WebSocket server!'}));
   }
 
   handleDisconnect(client: WebSocket) {
