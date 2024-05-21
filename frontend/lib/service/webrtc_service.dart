@@ -32,6 +32,7 @@ class WebRTCService {
   }
 
   Future<void> next() async {}
+
   Future<void> pause() async {
     await Future.delayed(const Duration(seconds: 1));
   }
