@@ -4,8 +4,8 @@ import 'package:frontend/widgets/control_buttons_and_filters.dart';
 import 'package:frontend/widgets/video_view/my_video_view.dart';
 import 'package:frontend/widgets/video_view/other_video_view.dart';
 
-class HomeScreenForWebAndMac extends StatelessWidget {
-  const HomeScreenForWebAndMac({super.key});
+class HomeScreenForLargeDevice extends StatelessWidget {
+  const HomeScreenForLargeDevice({super.key});
 
   @override
   Widget build(BuildContext context) {

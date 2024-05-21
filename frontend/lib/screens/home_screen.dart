@@ -1,6 +1,3 @@
-import 'dart:io' show Platform;
-
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/screens/home_screen_for_app.dart';
 import 'package:frontend/screens/home_screen_for_web_and_mac.dart';
@@ -10,16 +7,16 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (kIsWeb) {
-      return const HomeScreenForWebAndMac();
-    } else if (Platform.isAndroid) {
-      return const HomeScreenForApp();
-    } else if (Platform.isIOS) {
-      return const HomeScreenForApp();
-    } else if (Platform.isMacOS) {
-      return const HomeScreenForWebAndMac();
-    }
+    return OrientationBuilder(
+      builder: (context, orientation) {
+        final width = MediaQuery.of(context).size.width;
 
-    return const SizedBox.shrink();
+        if (width <= 992) {
+          return const HomeScreenForSmallAndMediumDevice();
+        }
+
+        return const HomeScreenForLargeDevice();
+      },
+    );
   }
 }
