@@ -1,4 +1,5 @@
 import 'package:frontend/models/message.dart';
+import 'package:frontend/models/web_socket_data.dart';
 
 class ChatService {
   ChatService._singleton();
@@ -13,6 +14,8 @@ class ChatService {
 
     // Call API to submit message;
   }
+
+  void onNewMessage(WebSocketMessage message) {}
 
   void clearMessages() {
     _messages.clear();
