@@ -1,6 +1,8 @@
 import 'dart:convert';
 
+import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:frontend/constants.dart';
+import 'package:frontend/service/web_socket_service.dart';
 
 class WebSocketMessage {
   const WebSocketMessage(this.type, this.data);
@@ -12,6 +14,24 @@ class WebSocketMessage {
     final type = WebSocketMessageType.fromString(json['type'].toString());
     final data = WebSocketData.fromJson(json['data']);
     return WebSocketMessage(type, data);
+  }
+
+  factory WebSocketMessage.join() {
+    return WebSocketMessage(
+      WebSocketMessageType.join,
+      WebSocketData(clientId: WebSocketService.I.socketId),
+    );
+  }
+
+  factory WebSocketMessage.candidates(RTCIceCandidate candidate) {
+    return WebSocketMessage(
+      WebSocketMessageType.candidates,
+      WebSocketData(
+        clientId: WebSocketService.I.socketId,
+        roomId: WebSocketService.I.roomId,
+        candidates: candidate.toMap(),
+      ),
+    );
   }
 
   Map<String, dynamic> toJson() {
@@ -29,15 +49,13 @@ class WebSocketMessage {
 class WebSocketData {
   const WebSocketData({
     this.clientId,
-    this.from,
     this.roomId,
     this.offer,
     this.answer,
     this.candidates,
   });
 
-  final String? clientId; // Client ID
-  final String? from; // Socket ID
+  final String? clientId; // Socket ID
   final String? roomId; // Room ID
   final Map<String, dynamic>? offer; // Offer SDP
   final Map<String, dynamic>? answer; // Answer SDP
@@ -46,7 +64,6 @@ class WebSocketData {
   factory WebSocketData.fromJson(Map json) {
     return WebSocketData(
       clientId: json['clientId'],
-      from: json['from'],
       roomId: json['roomId'],
       offer: json['offer'],
       answer: json['answer'],
@@ -57,7 +74,6 @@ class WebSocketData {
   Map<String, dynamic> toJson() {
     return {
       'clientId': clientId,
-      'from': from,
       'roomId': roomId,
       'offer': offer,
       'answer': answer,

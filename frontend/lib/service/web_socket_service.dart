@@ -1,8 +1,9 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:frontend/constants.dart';
-import 'package:frontend/models/web_socket_data.dart';
+import 'package:frontend/models/web_socket_message.dart';
 import 'package:frontend/service/chat_service.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
@@ -11,17 +12,29 @@ class WebSocketService {
   static final _instance = WebSocketService._singleton();
   static WebSocketService get I => _instance;
 
+  late WebSocketChannel _channel;
+  late String socketId;
+  late String roomId;
+
   final _channelUri = Uri.parse(
     'ws://${dotenv.env['API_URL']}:${dotenv.env['API_PORT']}/ws',
   );
 
   Future<void> initialize() async {
-    final channel = WebSocketChannel.connect(_channelUri);
-    await channel.ready;
+    _channel = WebSocketChannel.connect(_channelUri);
+    await _channel.ready;
 
-    channel.stream.listen((message) {
+    _channel.stream.listen((message) {
       handleNewMessage(message);
     });
+  }
+
+  Future<void> dispose() async {
+    _channel.sink.close();
+  }
+
+  void sendMessage(WebSocketMessage message) {
+    _channel.sink.add(message.jsonify());
   }
 
   void handleNewMessage(dynamic message) {
@@ -31,9 +44,11 @@ class WebSocketService {
     // Continue handle
     switch (wsMessage.type) {
       case WebSocketMessageType.id:
-      // TODO: Handle this case.
+        socketId = wsMessage.data.clientId ?? '';
+        log('SocketID: $socketId');
       case WebSocketMessageType.join:
-      // TODO: Handle this case.
+        roomId = wsMessage.data.roomId ?? '';
+        log('RoomID: $roomId');
       case WebSocketMessageType.offer:
       // TODO: Handle this case.
       case WebSocketMessageType.answer:

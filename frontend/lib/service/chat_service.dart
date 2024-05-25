@@ -1,5 +1,5 @@
 import 'package:frontend/models/message.dart';
-import 'package:frontend/models/web_socket_data.dart';
+import 'package:frontend/models/web_socket_message.dart';
 
 class ChatService {
   ChatService._singleton();

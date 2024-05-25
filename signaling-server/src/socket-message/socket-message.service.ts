@@ -48,12 +48,12 @@ export class SocketMessageService {
       `joinRoom send socket: ${JSON.stringify(socketMessageDTO)}`,
     );
     client.send(JSON.stringify(socketMessageDTO));
-    this.sendMessageForAnotherInRoom(
-      server,
-      client,
-      roomEmpty,
-      JSON.stringify({ type: 'text', data: `user ${client.id} joined room` }),
-    );
+    // this.sendMessageForAnotherInRoom(
+    //   server,
+    //   client,
+    //   roomEmpty,
+    //   JSON.stringify({ type: 'text', data: `user ${client.id} joined room` }),
+    // );
   }
 
   async leaveRoom(client: WebSocket, server: Server) {
