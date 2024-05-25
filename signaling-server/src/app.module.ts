@@ -5,10 +5,17 @@ import { SocketMessageModule } from './socket-message/socket-message.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { RoomModule } from './room/room.module';
 import { RedisModule } from './redis/redis.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
-  imports: [HealthModule, GatewayModule, SocketMessageModule, PrismaModule, RoomModule, RedisModule],
+  imports: [
+    ConfigModule.forRoot(),
+    HealthModule,
+    GatewayModule,
+    SocketMessageModule,
+    PrismaModule,
+    RoomModule,
+    RedisModule,
+  ],
 })
-
-
 export class AppModule {}

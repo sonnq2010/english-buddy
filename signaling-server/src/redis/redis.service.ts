@@ -4,9 +4,7 @@ import { InjectRedis } from '@nestjs-modules/ioredis';
 
 @Injectable()
 export class RedisService {
-  constructor(
-    @InjectRedis() private readonly redis: Redis,
-  ) {}
+  constructor(@InjectRedis() private readonly redis: Redis) {}
 
   async set(key: string, value: string): Promise<void> {
     await this.redis.set(key, value);

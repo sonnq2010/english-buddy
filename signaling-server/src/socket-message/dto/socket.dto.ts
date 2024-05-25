@@ -24,5 +24,5 @@ export enum TypeSocketMessage {
   answer = 'answer',
   skip = 'skip',
   stop = 'stop',
-  chat = 'chat'
+  chat = 'chat',
 }
