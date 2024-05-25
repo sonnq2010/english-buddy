@@ -5,6 +5,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:frontend/constants.dart';
 import 'package:frontend/models/web_socket_message.dart';
 import 'package:frontend/service/chat_service.dart';
+import 'package:frontend/service/webrtc_service.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
 class WebSocketService {
@@ -49,6 +50,7 @@ class WebSocketService {
       case WebSocketMessageType.join:
         roomId = wsMessage.data.roomId ?? '';
         log('RoomID: $roomId');
+        WebRTCService.I.onRoomJoined();
       case WebSocketMessageType.offer:
       // TODO: Handle this case.
       case WebSocketMessageType.answer:

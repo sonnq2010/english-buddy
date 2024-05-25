@@ -34,6 +34,17 @@ class WebSocketMessage {
     );
   }
 
+  factory WebSocketMessage.offer(RTCSessionDescription offer) {
+    return WebSocketMessage(
+      WebSocketMessageType.offer,
+      WebSocketData(
+        clientId: WebSocketService.I.socketId,
+        roomId: WebSocketService.I.roomId,
+        offer: offer.toMap(),
+      ),
+    );
+  }
+
   Map<String, dynamic> toJson() {
     return {
       'type': type.name,
@@ -72,12 +83,12 @@ class WebSocketData {
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'clientId': clientId,
-      'roomId': roomId,
-      'offer': offer,
-      'answer': answer,
-      'candidates': candidates,
-    };
+    final Map<String, dynamic> json = {};
+    if (clientId != null) json['clientId'] = clientId;
+    if (roomId != null) json['roomId'] = roomId;
+    if (offer != null) json['offer'] = offer;
+    if (answer != null) json['answer'] = answer;
+    if (candidates != null) json['candidates'] = candidates;
+    return json;
   }
 }

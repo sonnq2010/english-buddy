@@ -69,7 +69,19 @@ class WebRTCService {
     await Future.delayed(const Duration(seconds: 1));
   }
 
-  void _createOffer() {}
+  Future<void> onRoomJoined() async {
+    final offer = await _createOffer();
+    final message = WebSocketMessage.offer(offer);
+    WebSocketService.I.sendMessage(message);
+  }
+
+  Future<RTCSessionDescription> _createOffer() async {
+    final offer = await localPeerConnection.createOffer(
+      {'offerToReceiveVideo': 1},
+    );
+    await localPeerConnection.setLocalDescription(offer);
+    return offer;
+  }
 
   void _createAnswer() {}
 
