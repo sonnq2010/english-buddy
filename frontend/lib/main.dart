@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:frontend/screens/home_screen.dart';
-import 'package:frontend/service/web_socket_channel.dart';
+import 'package:frontend/service/web_socket_service.dart';
 import 'package:frontend/service/webrtc_service.dart';
 
 void main() async {
