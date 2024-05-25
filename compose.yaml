@@ -29,5 +29,13 @@ services:
     ports:
       - 8080:8080
 
+  redis:
+    image: redis:latest
+    restart: always
+    container_name: redis.da2
+    ports:
+      - 6379:6379
+    volumes:
+      - ./redis/data:/data
 
   
