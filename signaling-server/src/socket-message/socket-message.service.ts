@@ -1,8 +1,8 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { uuid } from 'uuidv4';
-import { WebSocket, Server } from 'ws';
-import { SocketMessageDTO, TypeSocketMessage } from './dto/socket.dto';
+import { v4 as uuidv4 } from 'uuid';
+import { Server, WebSocket } from 'ws';
 import { RoomService } from '../room/room.service';
+import { SocketMessageDTO, TypeSocketMessage } from './dto/socket.dto';
 
 @Injectable()
 export class SocketMessageService {
@@ -12,7 +12,7 @@ export class SocketMessageService {
   private logger = new Logger(SocketMessageService.name);
 
   generateClientId(client: WebSocket) {
-    const clientId: string = uuid();
+    const clientId: string = uuidv4();
     this.logger.log(`generateClientId clientId generated: ${clientId}`);
     client.id = clientId;
     const socketMessageDTO = new SocketMessageDTO({
@@ -48,12 +48,12 @@ export class SocketMessageService {
       `joinRoom send socket: ${JSON.stringify(socketMessageDTO)}`,
     );
     client.send(JSON.stringify(socketMessageDTO));
-    this.sendMessageForAnotherInRoom(
-      server,
-      client,
-      roomEmpty,
-      JSON.stringify({ type: 'text', data: `user ${client.id} joined room` }),
-    );
+    // this.sendMessageForAnotherInRoom(
+    //   server,
+    //   client,
+    //   roomEmpty,
+    //   JSON.stringify({ type: 'text', data: `user ${client.id} joined room` }),
+    // );
   }
 
   async leaveRoom(client: WebSocket, server: Server) {

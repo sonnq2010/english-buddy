@@ -5,8 +5,8 @@ import 'package:frontend/widgets/filter_bottom_sheet.dart';
 import 'package:frontend/widgets/video_view/my_video_view.dart';
 import 'package:frontend/widgets/video_view/other_video_view.dart';
 
-class HomeScreenForApp extends StatelessWidget {
-  const HomeScreenForApp({super.key});
+class HomeScreenForSmallAndMediumDevice extends StatelessWidget {
+  const HomeScreenForSmallAndMediumDevice({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +69,7 @@ class HomeScreenForApp extends StatelessWidget {
           Expanded(
             child: Stack(
               children: [
-                const OtherVideoView(useSwipe: true),
+                const OtherVideoView(useSwipe: false),
                 Positioned(
                   top: 0,
                   right: 0,

@@ -12,7 +12,7 @@ class OtherVideoView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (!useSwipe) {
-      return VideoView(videoRenderer: WebRTCService.I.otherVideoRenderer);
+      return VideoView(videoRenderer: WebRTCService.I.remoteVideoRenderer);
     }
 
     return Transform.rotate(

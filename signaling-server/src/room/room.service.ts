@@ -1,9 +1,9 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateRoomDTO } from './dto/room.dto';
-import { uuid } from 'uuidv4';
 import { WebSocket } from 'ws';
 import { RedisService } from '../redis/redis.service';
+import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class RoomService {
@@ -20,7 +20,7 @@ export class RoomService {
 
   async createNewRoom(userId: string) {
     this.logger.log(`createNewRoom for userId: ${userId}`);
-    const roomId = uuid();
+    const roomId = uuidv4();
 
     const createRoomDTO: CreateRoomDTO = {
       roomId,

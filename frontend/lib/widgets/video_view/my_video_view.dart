@@ -7,6 +7,6 @@ class MyVideoView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return VideoView(videoRenderer: WebRTCService.I.myVideoRenderer);
+    return VideoView(videoRenderer: WebRTCService.I.localVideoRenderer);
   }
 }
