@@ -22,7 +22,7 @@ export class GatewayService
   private logger: Logger = new Logger('EventsGateway');
   constructor(private socketService: SocketMessageService) {}
 
-  afterInit(server: Server) {
+  afterInit() {
     this.logger.log('WebSocket server initialized');
   }
 

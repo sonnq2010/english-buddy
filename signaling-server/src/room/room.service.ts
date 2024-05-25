@@ -3,7 +3,6 @@ import { PrismaService } from '../prisma/prisma.service';
 import { CreateRoomDTO } from './dto/room.dto';
 import { uuid } from 'uuidv4';
 import { WebSocket } from 'ws';
-import { Room } from './dto/room.dto';
 import { RedisService } from '../redis/redis.service';
 
 @Injectable()
