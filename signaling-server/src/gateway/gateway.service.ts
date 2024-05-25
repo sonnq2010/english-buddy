@@ -1,16 +1,16 @@
 // src/events/events.gateway.ts
+import { Logger } from '@nestjs/common';
 import {
-  WebSocketGateway,
-  OnGatewayInit,
-  WebSocketServer,
   OnGatewayConnection,
   OnGatewayDisconnect,
+  OnGatewayInit,
+  WebSocketGateway,
+  WebSocketServer,
 } from '@nestjs/websockets';
-import { Logger } from '@nestjs/common';
 import { Server, WebSocket } from 'ws';
-import { SocketMessageService } from '../socket-message/socket-message.service';
 import { Room } from '../room/dto/room.dto';
 import { TypeSocketMessage } from '../socket-message/dto/socket.dto';
+import { SocketMessageService } from '../socket-message/socket-message.service';
 
 @WebSocketGateway({ path: '/ws' })
 export class GatewayService
@@ -61,7 +61,7 @@ export class GatewayService
           this.socketService.sendMessageForAnotherInRoom(
             server,
             client,
-            messageJSON.roomId,
+            messageJSON.data.roomId,
             JSON.stringify(messageJSON),
           );
           break;
@@ -70,7 +70,7 @@ export class GatewayService
           this.socketService.sendMessageForAnotherInRoom(
             server,
             client,
-            messageJSON.roomId,
+            messageJSON.data.roomId,
             JSON.stringify(messageJSON),
           );
           break;
@@ -79,7 +79,7 @@ export class GatewayService
           this.socketService.sendMessageForAnotherInRoom(
             server,
             client,
-            messageJSON.roomId,
+            messageJSON.data.roomId,
             JSON.stringify(messageJSON),
           );
           break;
