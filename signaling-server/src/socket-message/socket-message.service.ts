@@ -1,13 +1,8 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { uuid } from 'uuidv4';
 import { WebSocket, Server } from 'ws';
-import {
-  SocketMessageDTO,
-  TypeSocketMessage,
-  // DataSocketMessageDTO,
-} from './dto/socket.dto';
+import { SocketMessageDTO, TypeSocketMessage } from './dto/socket.dto';
 import { RoomService } from '../room/room.service';
-// import { Room } from '../room/dto/room.dto';
 
 @Injectable()
 export class SocketMessageService {

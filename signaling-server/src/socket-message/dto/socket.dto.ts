@@ -10,9 +10,9 @@ export class SocketMessageDTO {
 export class DataSocketMessageDTO {
   clientId?: string;
   roomId?: string;
-  offer?: Object;
-  candidates?: Object;
-  answer?: Object;
+  offer?: NonNullable<unknown>;
+  candidates?: NonNullable<unknown>;
+  answer?: NonNullable<unknown>;
   message?: string;
 }
 
