@@ -45,6 +45,17 @@ class WebSocketMessage {
     );
   }
 
+  factory WebSocketMessage.answer(RTCSessionDescription answer) {
+    return WebSocketMessage(
+      WebSocketMessageType.answer,
+      WebSocketData(
+        clientId: WebSocketService.I.socketId,
+        roomId: WebSocketService.I.roomId,
+        answer: answer.toMap(),
+      ),
+    );
+  }
+
   Map<String, dynamic> toJson() {
     return {
       'type': type.name,

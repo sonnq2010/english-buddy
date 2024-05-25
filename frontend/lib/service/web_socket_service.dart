@@ -52,10 +52,11 @@ class WebSocketService {
         log('RoomID: $roomId');
         WebRTCService.I.onRoomJoined();
       case WebSocketMessageType.offer:
-      // TODO: Handle this case.
+        WebRTCService.I.onOfferReceived(wsMessage.data.offer);
       case WebSocketMessageType.answer:
-      // TODO: Handle this case.
+        WebRTCService.I.onAnswerReceived(wsMessage.data.answer);
       case WebSocketMessageType.candidates:
+        WebRTCService.I.onCandidatesReceived(wsMessage.data.candidates);
       // TODO: Handle this case.
       case WebSocketMessageType.skip:
       // TODO: Handle this case.

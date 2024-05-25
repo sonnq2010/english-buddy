@@ -20,12 +20,19 @@ class WebRTCService {
     ]
   };
 
-  final Map<String, dynamic> constraints = {
-    "mandatory": {
-      "OfferToReceiveAudio": true,
-      "OfferToReceiveVideo": true,
+  final Map<String, dynamic> _config = {
+    'mandatory': {},
+    'optional': [
+      {'DtlsSrtpKeyAgreement': true},
+    ]
+  };
+
+  final Map<String, dynamic> _dcConstraints = {
+    'mandatory': {
+      'OfferToReceiveAudio': true,
+      'OfferToReceiveVideo': true,
     },
-    "optional": [],
+    'optional': [],
   };
 
   Future<void> initialize() async {
@@ -40,7 +47,7 @@ class WebRTCService {
     localMediaStream = mediaStream;
     localVideoRenderer.srcObject = mediaStream;
 
-    localPeerConnection = await createPeerConnection(iceServers, constraints);
+    localPeerConnection = await createPeerConnection(iceServers, _config);
     localPeerConnection.onConnectionState = _onConnectionState;
     localPeerConnection.onIceCandidate = _onIceCandidate;
     localPeerConnection.onAddStream = _onAddStream;
@@ -69,21 +76,65 @@ class WebRTCService {
     await Future.delayed(const Duration(seconds: 1));
   }
 
+  // Create and send offer
   Future<void> onRoomJoined() async {
     final offer = await _createOffer();
     final message = WebSocketMessage.offer(offer);
     WebSocketService.I.sendMessage(message);
   }
 
-  Future<RTCSessionDescription> _createOffer() async {
-    final offer = await localPeerConnection.createOffer(
-      {'offerToReceiveVideo': 1},
+  // Receive and accept offer, send back answer
+  Future<void> onOfferReceived(Map<String, dynamic>? description) async {
+    if (description == null) return;
+
+    // Accept offer
+    final offer = RTCSessionDescription(
+      description['sdp'],
+      description['type'],
     );
+    localPeerConnection.setRemoteDescription(offer);
+
+    // Create create and send back
+    final answer = await _createAnswer();
+    final message = WebSocketMessage.answer(answer);
+    WebSocketService.I.sendMessage(message);
+  }
+
+  // Receive and accept answer
+  Future<void> onAnswerReceived(Map<String, dynamic>? description) async {
+    if (description == null) return;
+
+    // Accept answer
+    final offer = RTCSessionDescription(
+      description['sdp'],
+      description['type'],
+    );
+    localPeerConnection.setRemoteDescription(offer);
+  }
+
+  Future<void> onCandidatesReceived(Map<String, dynamic>? candidate) async {
+    if (candidate == null) return;
+
+    final iceCandidate = RTCIceCandidate(
+      candidate['candidate'],
+      candidate['sdpMid'],
+      candidate['sdpMLineIndex'],
+    );
+
+    await localPeerConnection.addCandidate(iceCandidate);
+  }
+
+  Future<RTCSessionDescription> _createOffer() async {
+    final offer = await localPeerConnection.createOffer(_dcConstraints);
     await localPeerConnection.setLocalDescription(offer);
     return offer;
   }
 
-  void _createAnswer() {}
+  Future<RTCSessionDescription> _createAnswer() async {
+    final answer = await localPeerConnection.createAnswer(_dcConstraints);
+    await localPeerConnection.setLocalDescription(answer);
+    return answer;
+  }
 
   void _onConnectionState(RTCPeerConnectionState connectionState) {
     // TODO:
