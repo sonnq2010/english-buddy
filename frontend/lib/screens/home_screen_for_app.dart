@@ -69,7 +69,7 @@ class HomeScreenForSmallAndMediumDevice extends StatelessWidget {
           Expanded(
             child: Stack(
               children: [
-                const OtherVideoView(useSwipe: true),
+                const OtherVideoView(useSwipe: false),
                 Positioned(
                   top: 0,
                   right: 0,
