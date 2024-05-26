@@ -48,6 +48,7 @@ export class SocketMessageService {
       `joinRoom send socket: ${JSON.stringify(socketMessageDTO)}`,
     );
     client.send(JSON.stringify(socketMessageDTO));
+    return roomEmpty;
     // this.sendMessageForAnotherInRoom(
     //   server,
     //   client,
@@ -62,26 +63,76 @@ export class SocketMessageService {
     if (!userInRoom) {
       return;
     }
-    const roomId = userInRoom.roomId;
-    const user1 = userInRoom.user1 === client.id ? null : userInRoom.user1;
-    const user2 = userInRoom.user2 === client.id ? null : userInRoom.user2;
+    const roomIdJoined = userInRoom.roomId;
+    const user1 = null;
+    const user2 = null;
 
-    await this.roomService.removeUserInRoom(roomId, user1, user2);
+    await this.roomService.removeUserInRoom(roomIdJoined, user1, user2);
     //remove user in room in redis
-    this.roomService.removeClientFromRoom(roomId, client.id);
+    this.roomService.removeClientFromRoom(roomIdJoined, client.id);
+    const socketMessageDTO = new SocketMessageDTO({
+      type: TypeSocketMessage.stop,
+      data: {
+        roomId: roomIdJoined,
+      },
+    });
     this.sendMessageForAnotherInRoom(
       server,
       client,
-      roomId,
-      JSON.stringify({ type: 'text', data: `user ${client.id} out room` }),
+      roomIdJoined,
+      JSON.stringify(socketMessageDTO),
     );
-    return roomId;
+    // find new room for client another
+    const clientIdAnother = await this.findClientAnotherInRoom(
+      server,
+      client,
+      roomIdJoined,
+    );
+    if (!clientIdAnother) return null;
+    this.roomService.removeClientFromRoom(roomIdJoined, clientIdAnother.id);
+    const roomIdNew = await this.joinRoom(
+      clientIdAnother,
+      server,
+      roomIdJoined,
+    );
+    return roomIdNew;
   }
 
-  async skipRoom(client: WebSocket, server: Server) {
+  async skipRoom(client: WebSocket, server: Server, roomId: string) {
     this.logger.log(`skipRoom clientId ${client.id} skip room`);
-    const roomIdJoined = await this.leaveRoom(client, server);
-    this.joinRoom(client, server, roomIdJoined);
+    //send skip room
+    const socketMessageDTO = new SocketMessageDTO({
+      type: TypeSocketMessage.skip,
+      data: {
+        roomId,
+      },
+    });
+
+    await this.sendMessageForAnotherInRoom(
+      server,
+      client,
+      roomId,
+      JSON.stringify(socketMessageDTO),
+    );
+    const roomIdNew = await this.leaveRoom(client, server);
+    //send to another client in message
+    this.joinRoom(client, server, roomIdNew);
+  }
+
+  async findClientAnotherInRoom(
+    server: Server,
+    client: WebSocket,
+    roomId: string,
+  ): Promise<WebSocket> {
+    const clientIds = await this.roomService.getClientsInRoom(roomId);
+    const clientIdAnother = clientIds.find((id) => id !== client.id);
+    this.logger.log(`clientIdAnother ${JSON.stringify(clientIdAnother)}`);
+    for (const wsClient of server.clients) {
+      if (wsClient.id === clientIdAnother) {
+        return wsClient;
+      }
+    }
+    return null;
   }
 
   async sendMessageForAnotherInRoom(
@@ -90,15 +141,16 @@ export class SocketMessageService {
     roomId: string,
     message: string,
   ) {
-    const clientIds = await this.roomService.getClientsInRoom(roomId);
-    const clientIdAnother = clientIds.find((id) => id !== client.id);
-    this.logger.log(`clientIdAnother ${JSON.stringify(clientIdAnother)}`);
+    const clientIdAnother = await this.findClientAnotherInRoom(
+      server,
+      client,
+      roomId,
+    );
     if (clientIdAnother) {
-      server.clients.forEach((client: WebSocket) => {
-        if (client.id === clientIdAnother) {
-          client.send(message);
-        }
-      });
+      this.logger.log(
+        `sendMessageForAnotherInRoom in room ${roomId} to clientId ${clientIdAnother.id} message ${JSON.stringify(message)}`,
+      );
+      clientIdAnother.send(message);
     }
   }
 }
