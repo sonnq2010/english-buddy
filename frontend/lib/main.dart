@@ -15,17 +15,17 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await WebSocketService.I.initialize();
   await WebRTCService.I.initialize();
-  runApp(const MyApp());
+  runApp(const EnglishBuddy());
 }
 
-class MyApp extends StatefulWidget {
-  const MyApp({super.key});
+class EnglishBuddy extends StatefulWidget {
+  const EnglishBuddy({super.key});
 
   @override
-  State<MyApp> createState() => _MyAppState();
+  State<EnglishBuddy> createState() => _EnglishBuddyState();
 }
 
-class _MyAppState extends State<MyApp> {
+class _EnglishBuddyState extends State<EnglishBuddy> {
   // This widget is the root of your application.
 
   @override
@@ -38,7 +38,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'English Buddy',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
