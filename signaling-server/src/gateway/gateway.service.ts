@@ -45,19 +45,15 @@ export class GatewayService
       const messageJSON = JSON.parse(message);
       switch (messageJSON.type) {
         case TypeSocketMessage.join:
-          this.logger.log(`send join message: ${message}`);
           this.socketService.joinRoom(client, server);
           break;
         case TypeSocketMessage.stop:
-          this.logger.log(`send stop message: ${message}`);
           this.socketService.leaveRoom(client, server);
           break;
         case TypeSocketMessage.skip:
-          this.logger.log(`send skip message: ${message}`);
-          this.socketService.skipRoom(client, server);
+          this.socketService.skipRoom(client, server, messageJSON.data.roomId);
           break;
         case TypeSocketMessage.offer:
-          this.logger.log(`send offer message: ${message}`);
           this.socketService.sendMessageForAnotherInRoom(
             server,
             client,
@@ -66,7 +62,6 @@ export class GatewayService
           );
           break;
         case TypeSocketMessage.candidates:
-          this.logger.log(`send candidates message: ${message}`);
           this.socketService.sendMessageForAnotherInRoom(
             server,
             client,
@@ -75,7 +70,6 @@ export class GatewayService
           );
           break;
         case TypeSocketMessage.answer:
-          this.logger.log(`send answer message: ${message}`);
           this.socketService.sendMessageForAnotherInRoom(
             server,
             client,
