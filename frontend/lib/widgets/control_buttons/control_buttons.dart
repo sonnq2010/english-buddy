@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/service/webrtc_service.dart';
-import 'package:frontend/widgets/control_buttons/next_button.dart';
-import 'package:frontend/widgets/control_buttons/pause_button.dart';
+import 'package:frontend/widgets/control_buttons/skip_button.dart';
 import 'package:frontend/widgets/control_buttons/start_button.dart';
+import 'package:frontend/widgets/control_buttons/stop_button.dart';
 
 class ControlButtons extends StatefulWidget {
   const ControlButtons({super.key});

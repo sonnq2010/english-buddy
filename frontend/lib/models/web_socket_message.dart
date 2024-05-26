@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:frontend/constants.dart';
@@ -11,9 +12,21 @@ class WebSocketMessage {
   final WebSocketData data;
 
   factory WebSocketMessage.fromJson(Map json) {
-    final type = WebSocketMessageType.fromString(json['type'].toString());
-    final data = WebSocketData.fromJson(json['data']);
-    return WebSocketMessage(type, data);
+    try {
+      final type = WebSocketMessageType.fromString(json['type'].toString());
+      final data = WebSocketData.fromJson(json['data']);
+      return WebSocketMessage(type, data);
+    } catch (e) {
+      log(e.toString());
+      return WebSocketMessage.unknown();
+    }
+  }
+
+  factory WebSocketMessage.unknown() {
+    return WebSocketMessage(
+      WebSocketMessageType.unknown,
+      WebSocketData(clientId: WebSocketService.I.clientId),
+    );
   }
 
   factory WebSocketMessage.join() {

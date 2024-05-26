@@ -1,3 +1,5 @@
+enum ButtonSize { large, small }
+
 enum Gender { male, female, all }
 
 enum EnglishLevel { a1, a2, b1, b2, c1, c2, all }
@@ -11,7 +13,7 @@ enum WebSocketMessageType {
   skip,
   stop,
   chat,
-  undefined;
+  unknown;
 
   static WebSocketMessageType fromString(String type) {
     switch (type) {
@@ -32,7 +34,7 @@ enum WebSocketMessageType {
       case 'chat':
         return chat;
       default:
-        return undefined;
+        return unknown;
     }
   }
 }

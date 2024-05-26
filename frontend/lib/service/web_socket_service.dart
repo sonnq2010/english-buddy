@@ -65,7 +65,7 @@ class WebSocketService {
         WebRTCService.I.handleRemoteStopped();
       case WebSocketMessageType.chat:
         return ChatService.I.onNewMessage(wsMessage);
-      case WebSocketMessageType.undefined:
+      case WebSocketMessageType.unknown:
         return;
     }
   }
