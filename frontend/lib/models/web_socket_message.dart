@@ -56,6 +56,26 @@ class WebSocketMessage {
     );
   }
 
+  factory WebSocketMessage.skip() {
+    return WebSocketMessage(
+      WebSocketMessageType.skip,
+      WebSocketData(
+        clientId: WebSocketService.I.clientId,
+        roomId: WebSocketService.I.roomId,
+      ),
+    );
+  }
+
+  factory WebSocketMessage.stop() {
+    return WebSocketMessage(
+      WebSocketMessageType.stop,
+      WebSocketData(
+        clientId: WebSocketService.I.clientId,
+        roomId: WebSocketService.I.roomId,
+      ),
+    );
+  }
+
   Map<String, dynamic> toJson() {
     return {
       'type': type.name,

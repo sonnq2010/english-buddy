@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class NextButton extends StatelessWidget {
-  const NextButton({super.key, required this.onPressed});
+class SkipButton extends StatelessWidget {
+  const SkipButton({super.key, required this.onPressed});
 
   final VoidCallback onPressed;
 

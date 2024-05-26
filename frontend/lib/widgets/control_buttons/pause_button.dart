@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class PauseButton extends StatelessWidget {
-  const PauseButton({
+class StopButton extends StatelessWidget {
+  const StopButton({
     super.key,
     required this.isDisabled,
     required this.onPressed,
