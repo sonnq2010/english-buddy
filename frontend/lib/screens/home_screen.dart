@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/screens/home_screen_for_app.dart';
-import 'package:frontend/screens/home_screen_for_web_and_mac.dart';
+import 'package:frontend/screens/home_screen_large_device.dart';
+import 'package:frontend/screens/home_screen_small_medium_device.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
