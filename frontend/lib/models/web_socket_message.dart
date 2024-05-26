@@ -19,7 +19,7 @@ class WebSocketMessage {
   factory WebSocketMessage.join() {
     return WebSocketMessage(
       WebSocketMessageType.join,
-      WebSocketData(clientId: WebSocketService.I.socketId),
+      WebSocketData(clientId: WebSocketService.I.clientId),
     );
   }
 
@@ -27,7 +27,7 @@ class WebSocketMessage {
     return WebSocketMessage(
       WebSocketMessageType.candidates,
       WebSocketData(
-        clientId: WebSocketService.I.socketId,
+        clientId: WebSocketService.I.clientId,
         roomId: WebSocketService.I.roomId,
         candidates: candidate.toMap(),
       ),
@@ -38,7 +38,7 @@ class WebSocketMessage {
     return WebSocketMessage(
       WebSocketMessageType.offer,
       WebSocketData(
-        clientId: WebSocketService.I.socketId,
+        clientId: WebSocketService.I.clientId,
         roomId: WebSocketService.I.roomId,
         offer: offer.toMap(),
       ),
@@ -49,7 +49,7 @@ class WebSocketMessage {
     return WebSocketMessage(
       WebSocketMessageType.answer,
       WebSocketData(
-        clientId: WebSocketService.I.socketId,
+        clientId: WebSocketService.I.clientId,
         roomId: WebSocketService.I.roomId,
         answer: answer.toMap(),
       ),

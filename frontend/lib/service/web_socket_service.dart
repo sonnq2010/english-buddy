@@ -14,7 +14,7 @@ class WebSocketService {
   static WebSocketService get I => _instance;
 
   late WebSocketChannel _channel;
-  late String socketId;
+  late String clientId;
   late String roomId;
 
   final _channelUri = Uri.parse(
@@ -45,8 +45,8 @@ class WebSocketService {
     // Continue handle
     switch (wsMessage.type) {
       case WebSocketMessageType.id:
-        socketId = wsMessage.data.clientId ?? '';
-        log('SocketID: $socketId');
+        clientId = wsMessage.data.clientId ?? '';
+        log('ClientID: $clientId');
       case WebSocketMessageType.join:
         roomId = wsMessage.data.roomId ?? '';
         log('RoomID: $roomId');
