@@ -18,7 +18,7 @@ class WebSocketService {
   late String roomId;
 
   final _channelUri = Uri.parse(
-    'ws://${dotenv.env['API_URL']}:${dotenv.env['API_PORT']}/ws',
+    '${dotenv.env['WS_URL']}:${dotenv.env['WS_PORT']}/ws',
   );
 
   Future<void> initialize() async {
