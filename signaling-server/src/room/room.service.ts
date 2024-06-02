@@ -66,7 +66,7 @@ export class RoomService {
           { user2: null, NOT: { user1: null }, isDeleted: false },
         ],
         NOT: {
-          roomId: roomIdJoined,
+          roomId: roomIdJoined ?? '',
         },
       },
     });
