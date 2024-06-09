@@ -1,9 +1,14 @@
 import { WebSocket } from 'ws';
 
-export class CreateRoomDTO {
+export class RoomDTO {
   roomId: string;
   user1?: string;
   user2?: string;
+  isDeleted?: boolean;
+
+  constructor(partial: Partial<RoomDTO>) {
+    Object.assign(this, partial);
+  }
 }
 
 export interface Room {
