@@ -1,5 +1,6 @@
 import 'package:frontend/models/message.dart';
 import 'package:frontend/models/web_socket_message.dart';
+import 'package:frontend/service/web_socket_service.dart';
 
 class ChatService {
   ChatService._singleton();
@@ -12,10 +13,17 @@ class ChatService {
   void submit(String message) {
     _messages.add(Message(content: message, isMe: true));
 
-    // Call API to submit message;
+    // Send message to socket
+    final webSocketMessage = WebSocketMessage.chat(message);
+    WebSocketService.I.sendMessage(webSocketMessage);
   }
 
-  void onNewMessage(WebSocketMessage message) {}
+  void onNewMessage(WebSocketMessage message) {
+    final chatMessage = message.data.chatMessage ?? '';
+    if (chatMessage.isEmpty) return;
+
+    _messages.add(Message(content: chatMessage, isMe: false));
+  }
 
   void clearMessages() {
     _messages.clear();
