@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:frontend/models/message.dart';
 import 'package:frontend/service/chat_service.dart';
@@ -18,10 +20,17 @@ class _ChatBoxState extends State<ChatBox> {
   final _textController = TextEditingController();
   final _scrollController = ScrollController();
 
+  late StreamSubscription<Message> messageStreamSubcription;
+
   @override
   void initState() {
     super.initState();
     _messages.addAll(ChatService.I.messages);
+    messageStreamSubcription = ChatService.I.messageStream.listen((message) {
+      setState(() {
+        _messages.insert(0, message);
+      });
+    });
   }
 
   @override
@@ -139,7 +148,7 @@ class _ChatBoxState extends State<ChatBox> {
         Message(content: message, isMe: true),
       );
     });
-    ChatService.I.submit(message);
+    ChatService.I.send(message);
     _scrollController.jumpTo(0);
   }
 }
