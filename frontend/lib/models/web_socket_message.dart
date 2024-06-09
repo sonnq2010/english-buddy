@@ -95,7 +95,7 @@ class WebSocketMessage {
       WebSocketData(
         clientId: WebSocketService.I.clientId,
         roomId: WebSocketService.I.roomId,
-        chatMessage: message,
+        message: message,
       ),
     );
   }
@@ -119,7 +119,7 @@ class WebSocketData {
     this.offer,
     this.answer,
     this.candidates,
-    this.chatMessage,
+    this.message,
   });
 
   final String? clientId; // Socket ID
@@ -127,7 +127,7 @@ class WebSocketData {
   final Map<String, dynamic>? offer; // Offer SDP
   final Map<String, dynamic>? answer; // Answer SDP
   final Map<String, dynamic>? candidates; // ICE candidates
-  final String? chatMessage; // Chat message
+  final String? message; // Chat message
 
   factory WebSocketData.fromJson(Map json) {
     return WebSocketData(
@@ -136,7 +136,7 @@ class WebSocketData {
       offer: json['offer'],
       answer: json['answer'],
       candidates: json['candidates'],
-      chatMessage: json['chat_message'],
+      message: json['message'],
     );
   }
 
@@ -147,7 +147,7 @@ class WebSocketData {
     if (offer != null) json['offer'] = offer;
     if (answer != null) json['answer'] = answer;
     if (candidates != null) json['candidates'] = candidates;
-    if (chatMessage != null) json['chat_message'] = chatMessage;
+    if (message != null) json['message'] = message;
     return json;
   }
 }

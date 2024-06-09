@@ -19,7 +19,7 @@ class ChatService {
   }
 
   void onNewMessage(WebSocketMessage message) {
-    final chatMessage = message.data.chatMessage ?? '';
+    final chatMessage = message.data.message ?? '';
     if (chatMessage.isEmpty) return;
 
     _messages.add(Message(content: chatMessage, isMe: false));
