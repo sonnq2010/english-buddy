@@ -12,7 +12,13 @@ class ControlButtons extends StatefulWidget {
 }
 
 class _ControlButtonsState extends State<ControlButtons> {
-  bool isStarted = false;
+  late bool isStarted;
+
+  @override
+  void initState() {
+    super.initState();
+    isStarted = WebRTCService.I.isStarted;
+  }
 
   void start() {
     WebRTCService.I.start().then((value) {

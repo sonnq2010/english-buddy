@@ -36,8 +36,8 @@ class _DismissableOtherVideoViewState extends State<DismissableOtherVideoView> {
   @override
   void initState() {
     super.initState();
+    _isStarted = WebRTCService.I.isStarted;
     _opacity = 0.0;
-    _isStarted = false;
   }
 
   void _toggleOpacity() {
