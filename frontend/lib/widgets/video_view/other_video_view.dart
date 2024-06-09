@@ -94,12 +94,21 @@ class _DismissableOtherVideoViewState extends State<DismissableOtherVideoView> {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      SkipButton(size: ButtonSize.small, onPressed: skip),
+                      Visibility(
+                        visible: _opacity == 1.0,
+                        child: SkipButton(
+                          size: ButtonSize.small,
+                          onPressed: skip,
+                        ),
+                      ),
                       const SizedBox(width: 16),
-                      StopButton(
-                        size: ButtonSize.small,
-                        isDisabled: false,
-                        onPressed: stop,
+                      Visibility(
+                        visible: _opacity == 1.0,
+                        child: StopButton(
+                          size: ButtonSize.small,
+                          isDisabled: false,
+                          onPressed: stop,
+                        ),
                       ),
                     ],
                   ),
