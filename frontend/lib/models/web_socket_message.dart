@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:frontend/constants.dart';
@@ -11,15 +12,27 @@ class WebSocketMessage {
   final WebSocketData data;
 
   factory WebSocketMessage.fromJson(Map json) {
-    final type = WebSocketMessageType.fromString(json['type'].toString());
-    final data = WebSocketData.fromJson(json['data']);
-    return WebSocketMessage(type, data);
+    try {
+      final type = WebSocketMessageType.fromString(json['type'].toString());
+      final data = WebSocketData.fromJson(json['data']);
+      return WebSocketMessage(type, data);
+    } catch (e) {
+      log(e.toString());
+      return WebSocketMessage.unknown();
+    }
+  }
+
+  factory WebSocketMessage.unknown() {
+    return WebSocketMessage(
+      WebSocketMessageType.unknown,
+      WebSocketData(clientId: WebSocketService.I.clientId),
+    );
   }
 
   factory WebSocketMessage.join() {
     return WebSocketMessage(
       WebSocketMessageType.join,
-      WebSocketData(clientId: WebSocketService.I.socketId),
+      WebSocketData(clientId: WebSocketService.I.clientId),
     );
   }
 
@@ -27,7 +40,7 @@ class WebSocketMessage {
     return WebSocketMessage(
       WebSocketMessageType.candidates,
       WebSocketData(
-        clientId: WebSocketService.I.socketId,
+        clientId: WebSocketService.I.clientId,
         roomId: WebSocketService.I.roomId,
         candidates: candidate.toMap(),
       ),
@@ -38,7 +51,7 @@ class WebSocketMessage {
     return WebSocketMessage(
       WebSocketMessageType.offer,
       WebSocketData(
-        clientId: WebSocketService.I.socketId,
+        clientId: WebSocketService.I.clientId,
         roomId: WebSocketService.I.roomId,
         offer: offer.toMap(),
       ),
@@ -49,9 +62,29 @@ class WebSocketMessage {
     return WebSocketMessage(
       WebSocketMessageType.answer,
       WebSocketData(
-        clientId: WebSocketService.I.socketId,
+        clientId: WebSocketService.I.clientId,
         roomId: WebSocketService.I.roomId,
         answer: answer.toMap(),
+      ),
+    );
+  }
+
+  factory WebSocketMessage.skip() {
+    return WebSocketMessage(
+      WebSocketMessageType.skip,
+      WebSocketData(
+        clientId: WebSocketService.I.clientId,
+        roomId: WebSocketService.I.roomId,
+      ),
+    );
+  }
+
+  factory WebSocketMessage.stop() {
+    return WebSocketMessage(
+      WebSocketMessageType.stop,
+      WebSocketData(
+        clientId: WebSocketService.I.clientId,
+        roomId: WebSocketService.I.roomId,
       ),
     );
   }

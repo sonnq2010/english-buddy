@@ -1,2 +1,2 @@
 .DS_Store
-redis/data/*.rdb
+*.pem

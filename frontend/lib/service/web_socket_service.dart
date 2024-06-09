@@ -14,11 +14,11 @@ class WebSocketService {
   static WebSocketService get I => _instance;
 
   late WebSocketChannel _channel;
-  late String socketId;
+  late String clientId;
   late String roomId;
 
   final _channelUri = Uri.parse(
-    'ws://${dotenv.env['API_URL']}:${dotenv.env['API_PORT']}/ws',
+    '${dotenv.env['WS_URL']}:${dotenv.env['WS_PORT']}/ws',
   );
 
   Future<void> initialize() async {
@@ -45,26 +45,27 @@ class WebSocketService {
     // Continue handle
     switch (wsMessage.type) {
       case WebSocketMessageType.id:
-        socketId = wsMessage.data.clientId ?? '';
-        log('SocketID: $socketId');
+        clientId = wsMessage.data.clientId ?? '';
+        log('ClientID: $clientId');
       case WebSocketMessageType.join:
         roomId = wsMessage.data.roomId ?? '';
         log('RoomID: $roomId');
-        WebRTCService.I.onRoomJoined();
+        WebRTCService.I.sendOffer();
       case WebSocketMessageType.offer:
-        WebRTCService.I.onOfferReceived(wsMessage.data.offer);
+        WebRTCService.I.handleRemoteOffer(wsMessage.data.offer);
       case WebSocketMessageType.answer:
-        WebRTCService.I.onAnswerReceived(wsMessage.data.answer);
+        WebRTCService.I.handleRemoteAnswer(wsMessage.data.answer);
       case WebSocketMessageType.candidates:
-        WebRTCService.I.onCandidatesReceived(wsMessage.data.candidates);
-      // TODO: Handle this case.
+        WebRTCService.I.handleRemoteCandidates(wsMessage.data.candidates);
       case WebSocketMessageType.skip:
-      // TODO: Handle this case.
+        roomId = '';
+        WebRTCService.I.handleRemoteSkipped();
       case WebSocketMessageType.stop:
-      // TODO: Handle this case.
+        roomId = '';
+        WebRTCService.I.handleRemoteStopped();
       case WebSocketMessageType.chat:
         return ChatService.I.onNewMessage(wsMessage);
-      case WebSocketMessageType.undefined:
+      case WebSocketMessageType.unknown:
         return;
     }
   }

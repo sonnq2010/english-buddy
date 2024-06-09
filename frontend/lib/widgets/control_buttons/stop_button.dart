@@ -1,54 +1,42 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/constants.dart';
 
-class StartButton extends StatefulWidget {
-  const StartButton({
+class StopButton extends StatelessWidget {
+  const StopButton({
     super.key,
     this.size = ButtonSize.large,
+    required this.isDisabled,
     required this.onPressed,
   });
 
   final ButtonSize size;
+  final bool isDisabled;
   final VoidCallback onPressed;
 
-  @override
-  State<StartButton> createState() => _StartButtonState();
-}
-
-class _StartButtonState extends State<StartButton> {
-  bool isPressed = false;
-
   EdgeInsetsGeometry get _padding {
-    if (widget.size == ButtonSize.small) return const EdgeInsets.all(20);
+    if (size == ButtonSize.small) return const EdgeInsets.all(20);
     return const EdgeInsets.all(32);
   }
 
   BorderRadiusGeometry get _borderRadius {
-    if (widget.size == ButtonSize.small) return BorderRadius.circular(10);
+    if (size == ButtonSize.small) return BorderRadius.circular(10);
     return BorderRadius.circular(20);
   }
 
   double get _size {
-    if (widget.size == ButtonSize.small) return 50;
+    if (size == ButtonSize.small) return 50;
     return 100;
-  }
-
-  void _onPressed() {
-    setState(() {
-      isPressed = true;
-    });
-    widget.onPressed();
   }
 
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      onPressed: isPressed ? null : _onPressed,
+      onPressed: isDisabled ? null : onPressed,
       style: ElevatedButton.styleFrom(
         padding: _padding,
         shape: RoundedRectangleBorder(borderRadius: _borderRadius),
       ),
-      child: Icon(Icons.play_arrow_rounded, size: _size),
+      child: Icon(Icons.pause_rounded, size: _size),
     );
   }
 }
