@@ -6,6 +6,8 @@ import { PrismaModule } from './prisma/prisma.module';
 import { RoomModule } from './room/room.module';
 import { RedisModule } from './redis/redis.module';
 import { ConfigModule } from '@nestjs/config';
+import { RoomRedisModule } from './room-redis/room-redis.module';
+import { RoomSocketModule } from './room-socket/room-socket.module';
 
 @Module({
   imports: [
@@ -16,6 +18,8 @@ import { ConfigModule } from '@nestjs/config';
     PrismaModule,
     RoomModule,
     RedisModule,
+    RoomRedisModule,
+    RoomSocketModule,
   ],
 })
 export class AppModule {}
