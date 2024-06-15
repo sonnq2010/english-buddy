@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:frontend/screens/home_screen.dart';
+import 'package:frontend/service/speech_recognitor.dart';
 import 'package:frontend/service/web_socket_service.dart';
 import 'package:frontend/service/webrtc_service.dart';
 
@@ -20,6 +21,7 @@ class _EnglishBuddyState extends State<EnglishBuddy> {
     loadEnv().then((_) {
       WebSocketService.I.initialize().then((value) {
         WebRTCService.I.initialize();
+        SpeechRecognitor.I.initialize();
       });
     });
   }

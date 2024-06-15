@@ -1,5 +1,6 @@
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:frontend/models/web_socket_message.dart';
+import 'package:frontend/service/speech_recognitor.dart';
 import 'package:frontend/service/web_socket_service.dart';
 
 class WebRTCService {
@@ -75,6 +76,7 @@ class WebRTCService {
     isStarted = true;
     final message = WebSocketMessage.join();
     WebSocketService.I.sendMessage(message);
+    SpeechRecognitor.I.startListen();
   }
 
   Future<void> skip() async {
@@ -88,6 +90,7 @@ class WebRTCService {
     remoteVideoRenderer.srcObject = null;
     final message = WebSocketMessage.stop();
     WebSocketService.I.sendMessage(message);
+    SpeechRecognitor.I.stopListen();
   }
 
   // Create and send offer
