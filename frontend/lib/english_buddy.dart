@@ -17,6 +17,7 @@ class _EnglishBuddyState extends State<EnglishBuddy> {
   void initState() {
     super.initState();
 
+    // Initialize
     loadEnv().then((_) {
       WebSocketService.I.initialize().then((value) {
         WebRTCService.I.initialize();
