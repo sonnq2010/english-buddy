@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/service/report_service.dart';
 import 'package:frontend/widgets/chat_box.dart';
 import 'package:frontend/widgets/control_buttons_and_filters.dart';
 import 'package:frontend/widgets/video_view/my_video_view.dart';
@@ -17,14 +18,29 @@ class HomeScreenForLargeDevice extends StatelessWidget {
   }
 
   Widget _buildCameras() {
-    return const Expanded(
+    return Expanded(
       flex: 13,
       child: Row(
         children: [
           Expanded(
-            child: OtherVideoView(),
+            child: Stack(
+              children: [
+                const OtherVideoView(),
+                Positioned(
+                  top: 8,
+                  right: 8,
+                  child: IconButton(
+                    style: IconButton.styleFrom(
+                      backgroundColor: Colors.deepPurpleAccent.withOpacity(0.2),
+                    ),
+                    onPressed: ReportService.I.reportUser,
+                    icon: const Icon(Icons.report_outlined, size: 30),
+                  ),
+                ),
+              ],
+            ),
           ),
-          Expanded(
+          const Expanded(
             child: MyVideoView(),
           ),
         ],

@@ -47,24 +47,40 @@ class WebSocketService {
       case WebSocketMessageType.id:
         clientId = wsMessage.data.clientId ?? '';
         log('ClientID: $clientId');
+        break;
+
       case WebSocketMessageType.join:
         roomId = wsMessage.data.roomId ?? '';
         log('RoomID: $roomId');
         WebRTCService.I.sendOffer();
+        break;
+
       case WebSocketMessageType.offer:
         WebRTCService.I.handleRemoteOffer(wsMessage.data.offer);
+        break;
+
       case WebSocketMessageType.answer:
         WebRTCService.I.handleRemoteAnswer(wsMessage.data.answer);
+        break;
+
       case WebSocketMessageType.candidates:
         WebRTCService.I.handleRemoteCandidates(wsMessage.data.candidates);
+        break;
+
       case WebSocketMessageType.skip:
         roomId = '';
         WebRTCService.I.handleRemoteSkipped();
+        break;
+
       case WebSocketMessageType.stop:
         roomId = '';
         WebRTCService.I.handleRemoteStopped();
+        break;
+
       case WebSocketMessageType.chat:
-        return ChatService.I.onNewMessage(wsMessage);
+        ChatService.I.onNewMessage(wsMessage);
+        break;
+
       case WebSocketMessageType.unknown:
         return;
     }

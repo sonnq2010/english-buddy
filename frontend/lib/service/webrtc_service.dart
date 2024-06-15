@@ -7,6 +7,8 @@ class WebRTCService {
   static final WebRTCService _instance = WebRTCService._singleton();
   static WebRTCService get I => _instance;
 
+  bool isStarted = false;
+
   final localVideoRenderer = RTCVideoRenderer();
   final remoteVideoRenderer = RTCVideoRenderer();
 
@@ -70,6 +72,7 @@ class WebRTCService {
   }
 
   Future<void> start() async {
+    isStarted = true;
     final message = WebSocketMessage.join();
     WebSocketService.I.sendMessage(message);
   }
@@ -81,6 +84,7 @@ class WebRTCService {
   }
 
   Future<void> stop() async {
+    isStarted = false;
     remoteVideoRenderer.srcObject = null;
     final message = WebSocketMessage.stop();
     WebSocketService.I.sendMessage(message);
