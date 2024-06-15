@@ -27,9 +27,8 @@ class _ChatBoxState extends State<ChatBox> {
     super.initState();
     _messages.addAll(ChatService.I.messages);
     messageStreamSubcription = ChatService.I.messageStream.listen((message) {
-      setState(() {
-        _messages.insert(0, message);
-      });
+      _messages.insert(0, message);
+      setState(() {});
     });
   }
 
