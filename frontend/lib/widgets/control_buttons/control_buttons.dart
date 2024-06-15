@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/service/webrtc_service.dart';
-import 'package:frontend/widgets/control_buttons/next_button.dart';
-import 'package:frontend/widgets/control_buttons/pause_button.dart';
+import 'package:frontend/widgets/control_buttons/skip_button.dart';
 import 'package:frontend/widgets/control_buttons/start_button.dart';
+import 'package:frontend/widgets/control_buttons/stop_button.dart';
 
 class ControlButtons extends StatefulWidget {
   const ControlButtons({super.key});
@@ -12,7 +12,13 @@ class ControlButtons extends StatefulWidget {
 }
 
 class _ControlButtonsState extends State<ControlButtons> {
-  bool isStarted = false;
+  late bool isStarted;
+
+  @override
+  void initState() {
+    super.initState();
+    isStarted = WebRTCService.I.isStarted;
+  }
 
   void start() {
     WebRTCService.I.start().then((value) {
@@ -22,12 +28,12 @@ class _ControlButtonsState extends State<ControlButtons> {
     });
   }
 
-  void next() {
-    WebRTCService.I.next();
+  void skip() {
+    WebRTCService.I.skip();
   }
 
-  void pause() {
-    WebRTCService.I.pause();
+  void stop() {
+    WebRTCService.I.stop();
     setState(() {
       isStarted = false;
     });
@@ -37,9 +43,9 @@ class _ControlButtonsState extends State<ControlButtons> {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        isStarted ? NextButton(onPressed: next) : StartButton(onPressed: start),
+        isStarted ? SkipButton(onPressed: skip) : StartButton(onPressed: start),
         const SizedBox(width: 16),
-        PauseButton(isDisabled: !isStarted, onPressed: pause),
+        StopButton(isDisabled: !isStarted, onPressed: stop),
       ],
     );
   }

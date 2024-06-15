@@ -7,6 +7,8 @@ class WebRTCService {
   static final WebRTCService _instance = WebRTCService._singleton();
   static WebRTCService get I => _instance;
 
+  bool isStarted = false;
+
   final localVideoRenderer = RTCVideoRenderer();
   final remoteVideoRenderer = RTCVideoRenderer();
 
@@ -62,29 +64,41 @@ class WebRTCService {
   Future<void> dispose() async {
     localVideoRenderer.dispose();
     remoteVideoRenderer.dispose();
+
+    localMediaStream.getTracks().forEach((element) async {
+      await element.stop();
+    });
     localMediaStream.dispose();
   }
 
   Future<void> start() async {
+    isStarted = true;
     final message = WebSocketMessage.join();
     WebSocketService.I.sendMessage(message);
   }
 
-  Future<void> next() async {}
+  Future<void> skip() async {
+    remoteVideoRenderer.srcObject = null;
+    final message = WebSocketMessage.skip();
+    WebSocketService.I.sendMessage(message);
+  }
 
-  Future<void> pause() async {
-    await Future.delayed(const Duration(seconds: 1));
+  Future<void> stop() async {
+    isStarted = false;
+    remoteVideoRenderer.srcObject = null;
+    final message = WebSocketMessage.stop();
+    WebSocketService.I.sendMessage(message);
   }
 
   // Create and send offer
-  Future<void> onRoomJoined() async {
+  Future<void> sendOffer() async {
     final offer = await _createOffer();
     final message = WebSocketMessage.offer(offer);
     WebSocketService.I.sendMessage(message);
   }
 
   // Receive and accept offer, send back answer
-  Future<void> onOfferReceived(Map<String, dynamic>? description) async {
+  Future<void> handleRemoteOffer(Map<String, dynamic>? description) async {
     if (description == null) return;
 
     // Accept offer
@@ -101,7 +115,7 @@ class WebRTCService {
   }
 
   // Receive and accept answer
-  Future<void> onAnswerReceived(Map<String, dynamic>? description) async {
+  Future<void> handleRemoteAnswer(Map<String, dynamic>? description) async {
     if (description == null) return;
 
     // Accept answer
@@ -112,7 +126,7 @@ class WebRTCService {
     localPeerConnection.setRemoteDescription(offer);
   }
 
-  Future<void> onCandidatesReceived(Map<String, dynamic>? candidate) async {
+  Future<void> handleRemoteCandidates(Map<String, dynamic>? candidate) async {
     if (candidate == null) return;
 
     final iceCandidate = RTCIceCandidate(
@@ -122,6 +136,14 @@ class WebRTCService {
     );
 
     await localPeerConnection.addCandidate(iceCandidate);
+  }
+
+  Future<void> handleRemoteSkipped() async {
+    remoteVideoRenderer.srcObject = null;
+  }
+
+  Future<void> handleRemoteStopped() async {
+    remoteVideoRenderer.srcObject = null;
   }
 
   Future<RTCSessionDescription> _createOffer() async {

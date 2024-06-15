@@ -37,6 +37,8 @@ export class SocketMessageService {
           break;
         case TypeSocketMessage.answer:
           await this.handleAnswer(client, messageJSON);
+        case TypeSocketMessage.chat:
+          await this.handleChatMessage(client, messageJSON);
           break;
         default:
           break;
@@ -201,6 +203,26 @@ export class SocketMessageService {
       data: {
         roomId,
         answer,
+      },
+    });
+    await this.sendMessageForAnotherInRoom(
+      client,
+      roomId,
+      JSON.stringify(socketMessageDTO),
+    );
+  }
+
+  //handleChatMessage
+  async handleChatMessage(client: WebSocket, socketMessage: SocketMessageDTO) {
+    this.logger.log(
+      `handleChatMessage clientId ${client.id} message ${JSON.stringify(socketMessage)}`,
+    );
+    const { roomId, message } = socketMessage.data;
+    const socketMessageDTO = new SocketMessageDTO({
+      type: TypeSocketMessage.chat,
+      data: {
+        roomId,
+        message,
       },
     });
     await this.sendMessageForAnotherInRoom(

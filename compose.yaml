@@ -10,8 +10,8 @@ services:
     ports:
       - 5432:5432
     volumes:
-      - ./postgres/pgdata:/var/lib/postgresql/data
-      - ./postgres/init:/docker-entrypoint-initdb.d
+      - ./db/postgres/pgdata:/var/lib/postgresql/data
+      - ./db/postgres/init:/docker-entrypoint-initdb.d
 
   api:
     build:
@@ -36,6 +36,6 @@ services:
     ports:
       - 6379:6379
     volumes:
-      - ./redis/data:/data
+      - ./db/redis/data:/data
 
   
