@@ -7,6 +7,25 @@ class MyVideoView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return VideoView(videoRenderer: WebRTCService.I.localVideoRenderer);
+    return Stack(
+      children: [
+        VideoView(videoRenderer: WebRTCService.I.localVideoRenderer),
+        Positioned(
+          top: 8,
+          right: 8,
+          child: IconButton(
+            style: IconButton.styleFrom(
+              backgroundColor: Colors.deepPurpleAccent.withOpacity(0.2),
+            ),
+            onPressed: () {},
+            icon: const Icon(
+              Icons.person_outline,
+              size: 30,
+              color: Colors.white,
+            ),
+          ),
+        ),
+      ],
+    );
   }
 }
