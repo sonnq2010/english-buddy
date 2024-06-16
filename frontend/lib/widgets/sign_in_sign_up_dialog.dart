@@ -11,6 +11,7 @@ class SignInSignUpDialog extends StatefulWidget {
 
 class _SignInSignUpDialogState extends State<SignInSignUpDialog> {
   bool _isSignIn = true;
+  String errorMessage = '';
   final _userNameController = TextEditingController();
   final _passwordController = TextEditingController();
   final _comfirmPasswordController = TextEditingController();
@@ -20,7 +21,12 @@ class _SignInSignUpDialogState extends State<SignInSignUpDialog> {
       userName: _userNameController.text,
       password: _passwordController.text,
     );
-    if (!ok) return;
+    if (!ok) {
+      setState(() {
+        errorMessage = 'Wrong username or password';
+      });
+      return;
+    }
     if (!mounted) return;
 
     Navigator.pop(context);
@@ -28,10 +34,16 @@ class _SignInSignUpDialogState extends State<SignInSignUpDialog> {
 
   Future<void> signUp() async {
     final ok = await AuthService.I.signUp(
-        userName: _userNameController.text,
-        password: _passwordController.text,
-        confirmPassword: _comfirmPasswordController.text);
-    if (!ok) return;
+      userName: _userNameController.text,
+      password: _passwordController.text,
+      confirmPassword: _comfirmPasswordController.text,
+    );
+    if (!ok) {
+      setState(() {
+        errorMessage = 'Invalid sign up information';
+      });
+      return;
+    }
     if (!mounted) return;
 
     Navigator.pop(context);
@@ -64,19 +76,45 @@ class _SignInSignUpDialogState extends State<SignInSignUpDialog> {
               border: OutlineInputBorder(),
               contentPadding: EdgeInsets.symmetric(horizontal: 8),
             ),
+            onSubmitted: (value) {
+              if (_isSignIn) {
+                signIn();
+              } else {
+                signUp();
+              }
+            },
           ),
           const SizedBox(height: 16),
           _PasswordField(
             labelText: 'Password',
             controller: _passwordController,
+            onSubmitted: (value) {
+              if (_isSignIn) {
+                signIn();
+              } else {
+                signUp();
+              }
+            },
           ),
           if (!_isSignIn) ...[
             const SizedBox(height: 16),
             _PasswordField(
               labelText: 'Confirm password',
               controller: _comfirmPasswordController,
+              onSubmitted: (value) {
+                if (_isSignIn) {
+                  signIn();
+                } else {
+                  signUp();
+                }
+              },
             ),
           ],
+          if (errorMessage.isNotEmpty)
+            Text(
+              errorMessage,
+              style: const TextStyle(color: Colors.red),
+            ),
           const SizedBox(height: 8),
           GestureDetector(
             onTap: () {
@@ -155,10 +193,12 @@ class _PasswordField extends StatefulWidget {
   const _PasswordField({
     required this.labelText,
     required this.controller,
+    required this.onSubmitted,
   });
 
   final String labelText;
   final TextEditingController controller;
+  final void Function(String value) onSubmitted;
 
   @override
   State<_PasswordField> createState() => __PasswordFieldState();
@@ -194,6 +234,7 @@ class __PasswordFieldState extends State<_PasswordField> {
           },
         ),
       ),
+      onSubmitted: widget.onSubmitted,
     );
   }
 }
