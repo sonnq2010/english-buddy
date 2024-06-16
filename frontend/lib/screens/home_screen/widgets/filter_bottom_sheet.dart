@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/constants.dart';
-import 'package:frontend/widgets/control_buttons/dropdown_button.dart';
+import 'package:frontend/screens/home_screen/widgets/control_buttons/dropdown_button.dart';
 
 class FilterBottomSheet extends StatelessWidget {
   const FilterBottomSheet({super.key});

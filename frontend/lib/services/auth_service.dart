@@ -1,5 +1,5 @@
 import 'package:frontend/models/user.dart';
-import 'package:frontend/repository/auth_repo.dart';
+import 'package:frontend/repositories/auth_repo.dart';
 
 class AuthService {
   AuthService._();

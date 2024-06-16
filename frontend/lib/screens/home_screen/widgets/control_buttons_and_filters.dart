@@ -2,8 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:frontend/constants.dart';
-import 'package:frontend/widgets/control_buttons/control_buttons.dart';
-import 'package:frontend/widgets/control_buttons/dropdown_button.dart';
+import 'package:frontend/screens/home_screen/widgets/control_buttons/control_buttons.dart';
+import 'package:frontend/screens/home_screen/widgets/control_buttons/dropdown_button.dart';
 
 class ControllButtonsAndFilters extends StatelessWidget {
   const ControllButtonsAndFilters({super.key});

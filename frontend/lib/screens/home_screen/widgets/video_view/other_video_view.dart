@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/constants.dart';
-import 'package:frontend/service/report_service.dart';
-import 'package:frontend/service/webrtc_service.dart';
-import 'package:frontend/widgets/control_buttons/skip_button.dart';
-import 'package:frontend/widgets/control_buttons/start_button.dart';
-import 'package:frontend/widgets/control_buttons/stop_button.dart';
-import 'package:frontend/widgets/video_view/video_view.dart';
+import 'package:frontend/screens/home_screen/widgets/control_buttons/skip_button.dart';
+import 'package:frontend/screens/home_screen/widgets/control_buttons/start_button.dart';
+import 'package:frontend/screens/home_screen/widgets/control_buttons/stop_button.dart';
+import 'package:frontend/services/report_service.dart';
+import 'package:frontend/services/webrtc_service.dart';
+import 'package:frontend/widgets/video_view.dart';
 
 class OtherVideoView extends StatelessWidget {
   const OtherVideoView({super.key, this.useSwipe = false});

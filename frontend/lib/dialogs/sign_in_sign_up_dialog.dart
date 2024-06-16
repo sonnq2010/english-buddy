@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/service/auth_service.dart';
+import 'package:frontend/services/auth_service.dart';
 import 'package:frontend/widgets/hover_builder.dart';
 
 class SignInSignUpDialog extends StatefulWidget {

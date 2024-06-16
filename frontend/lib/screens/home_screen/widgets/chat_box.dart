@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:frontend/models/message.dart';
-import 'package:frontend/service/chat_service.dart';
+import 'package:frontend/services/chat_service.dart';
 
 class ChatBox extends StatefulWidget {
   const ChatBox({super.key, this.forBottomSheet = false});

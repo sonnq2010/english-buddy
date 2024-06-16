@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/screens/home_screen_large_device.dart';
-import 'package:frontend/screens/home_screen_small_medium_device.dart';
-import 'package:frontend/service/auth_service.dart';
-import 'package:frontend/widgets/sign_in_sign_up_dialog.dart';
+import 'package:frontend/dialogs/sign_in_sign_up_dialog.dart';
+import 'package:frontend/screens/home_screen/home_screen_large_device.dart';
+import 'package:frontend/screens/home_screen/home_screen_small_medium_device.dart';
+import 'package:frontend/services/auth_service.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});

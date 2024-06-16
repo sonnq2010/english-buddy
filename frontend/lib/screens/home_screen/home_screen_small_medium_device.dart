@@ -1,9 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:frontend/widgets/chat_box.dart';
-import 'package:frontend/widgets/filter_bottom_sheet.dart';
-import 'package:frontend/widgets/video_view/my_video_view.dart';
-import 'package:frontend/widgets/video_view/other_video_view.dart';
+import 'package:frontend/screens/home_screen/widgets/chat_box.dart';
+import 'package:frontend/screens/home_screen/widgets/filter_bottom_sheet.dart';
+import 'package:frontend/screens/home_screen/widgets/video_view/my_video_view.dart';
+import 'package:frontend/screens/home_screen/widgets/video_view/other_video_view.dart';
 
 class HomeScreenForSmallAndMediumDevice extends StatelessWidget {
   const HomeScreenForSmallAndMediumDevice({super.key});
