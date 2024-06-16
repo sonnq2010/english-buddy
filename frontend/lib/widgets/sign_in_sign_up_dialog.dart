@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/service/auth_service.dart';
 import 'package:frontend/widgets/hover_builder.dart';
 
 class SignInSignUpDialog extends StatefulWidget {
@@ -13,6 +14,28 @@ class _SignInSignUpDialogState extends State<SignInSignUpDialog> {
   final _userNameController = TextEditingController();
   final _passwordController = TextEditingController();
   final _comfirmPasswordController = TextEditingController();
+
+  Future<void> signIn() async {
+    final ok = await AuthService.I.signIn(
+      userName: _userNameController.text,
+      password: _passwordController.text,
+    );
+    if (!ok) return;
+    if (!mounted) return;
+
+    Navigator.pop(context);
+  }
+
+  Future<void> signUp() async {
+    final ok = await AuthService.I.signUp(
+        userName: _userNameController.text,
+        password: _passwordController.text,
+        confirmPassword: _comfirmPasswordController.text);
+    if (!ok) return;
+    if (!mounted) return;
+
+    Navigator.pop(context);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -79,6 +102,7 @@ class _SignInSignUpDialogState extends State<SignInSignUpDialog> {
           ElevatedButton(
             onPressed: () {},
             style: ElevatedButton.styleFrom(
+              backgroundColor: Theme.of(context).primaryColor,
               minimumSize: const Size.fromHeight(40),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8),
@@ -86,6 +110,9 @@ class _SignInSignUpDialogState extends State<SignInSignUpDialog> {
             ),
             child: Text(
               _isSignIn ? 'Sign in' : 'Sign up',
+              style: TextStyle(
+                color: Theme.of(context).secondaryHeaderColor,
+              ),
             ),
           ),
           const SizedBox(height: 8),
@@ -101,7 +128,9 @@ class _SignInSignUpDialogState extends State<SignInSignUpDialog> {
           ),
           const SizedBox(height: 8),
           ElevatedButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.pop(context);
+            },
             style: ElevatedButton.styleFrom(
               minimumSize: const Size.fromHeight(40),
               shape: RoundedRectangleBorder(

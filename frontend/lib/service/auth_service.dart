@@ -19,7 +19,34 @@ class AuthService {
     return _currentUser;
   }
 
-  Future<void> signIn() async {}
+  Future<bool> signIn({
+    required String userName,
+    required String password,
+  }) async {
+    userName = userName.trim();
+    if (userName.isEmpty) return false;
 
-  Future<void> signUp() async {}
+    password = password.trim();
+    if (password.isEmpty) return false;
+
+    // TODO: Call API to sign in
+    return true;
+  }
+
+  Future<bool> signUp({
+    required String userName,
+    required String password,
+    required String confirmPassword,
+  }) async {
+    userName = userName.trim();
+    if (userName.isEmpty) return false;
+
+    password = password.trim();
+    if (password.isEmpty) return false;
+
+    if (confirmPassword != password) return false;
+
+    // TODO: Call API to sign in
+    return true;
+  }
 }
