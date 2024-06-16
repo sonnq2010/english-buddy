@@ -17,13 +17,13 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
 
     // Open sign in/sign up dialog
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      final user = await AuthService.I.getCurrentUser();
-      if (user != null) return;
-      if (!mounted) return;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      AuthService.I.getCurrentUser().then((user) {
+        if (user != null) return;
 
-      // Open dialog
-      SignInSignUpDialog.show(context);
+        // Open dialog
+        SignInSignUpDialog.show(context);
+      });
     });
   }
 

@@ -20,14 +20,14 @@ class MyVideoView extends StatelessWidget {
             style: IconButton.styleFrom(
               backgroundColor: Colors.deepPurpleAccent.withOpacity(0.2),
             ),
-            onPressed: () async {
+            onPressed: () {
               AuthService.I.getCurrentUser().then((currentUser) {
                 if (currentUser == null) {
                   SignInSignUpDialog.show(context);
                   return;
                 }
 
-                ProfileDialog.show(context);
+                ProfileDialog.show(context, user: currentUser);
               });
             },
             icon: const Icon(

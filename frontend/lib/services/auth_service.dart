@@ -10,12 +10,17 @@ class AuthService {
   User? _currentUser;
 
   Future<User?> getCurrentUser() async {
-    if (_currentUser != null) return _currentUser;
+    // TODO: Uncomment
 
-    final token = await _repo.getToken();
-    if (token == null) return null;
+    // if (_currentUser != null) return _currentUser;
 
-    _currentUser = User(id: '', userName: 'test', idToken: token);
+    // final token = await _repo.getToken();
+    // if (token == null) return null;
+
+    // _currentUser = User(id: '', userName: 'test', idToken: token);
+    // return _currentUser;
+
+    _currentUser = const User(id: '', userName: 'test', idToken: '123');
     return _currentUser;
   }
 
