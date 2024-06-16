@@ -5,6 +5,16 @@ import 'package:frontend/widgets/hover_builder.dart';
 class SignInSignUpDialog extends StatefulWidget {
   const SignInSignUpDialog({super.key});
 
+  static void show(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return const SignInSignUpDialog();
+      },
+      barrierDismissible: false,
+    );
+  }
+
   @override
   State<SignInSignUpDialog> createState() => _SignInSignUpDialogState();
 }

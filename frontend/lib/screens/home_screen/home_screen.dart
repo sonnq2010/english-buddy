@@ -23,13 +23,7 @@ class _HomeScreenState extends State<HomeScreen> {
       if (!mounted) return;
 
       // Open dialog
-      await showDialog(
-        context: context,
-        builder: (context) {
-          return const SignInSignUpDialog();
-        },
-        barrierDismissible: false,
-      );
+      SignInSignUpDialog.show(context);
     });
   }
 
