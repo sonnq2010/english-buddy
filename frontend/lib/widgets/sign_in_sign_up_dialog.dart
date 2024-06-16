@@ -100,7 +100,13 @@ class _SignInSignUpDialogState extends State<SignInSignUpDialog> {
           ),
           const SizedBox(height: 24),
           ElevatedButton(
-            onPressed: () {},
+            onPressed: () {
+              if (_isSignIn) {
+                signIn();
+              } else {
+                signUp();
+              }
+            },
             style: ElevatedButton.styleFrom(
               backgroundColor: Theme.of(context).primaryColor,
               minimumSize: const Size.fromHeight(40),
