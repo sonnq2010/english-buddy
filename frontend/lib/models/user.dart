@@ -1,11 +1,17 @@
 class User {
-  const User({
+  User({
     required this.id,
     required this.userName,
     required this.idToken,
   });
 
-  final String id;
-  final String userName;
-  final String idToken;
+  String id;
+  String userName;
+  String idToken;
+
+  void updateWith({
+    String? userName,
+  }) {
+    this.userName = userName ?? this.userName;
+  }
 }

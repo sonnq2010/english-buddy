@@ -20,7 +20,7 @@ class AuthService {
     // _currentUser = User(id: '', userName: 'test', idToken: token);
     // return _currentUser;
 
-    _currentUser = const User(id: '', userName: 'test', idToken: '123');
+    _currentUser = User(id: '', userName: 'test', idToken: '123');
     return _currentUser;
   }
 
