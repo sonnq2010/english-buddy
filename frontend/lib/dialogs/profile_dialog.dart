@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:frontend/constants.dart';
 import 'package:frontend/models/user.dart';
 import 'package:frontend/screens/home_screen/widgets/control_buttons/dropdown_button.dart';
+import 'package:frontend/widgets/hover_builder.dart';
+import 'package:image_picker/image_picker.dart';
 
 class ProfileDialog extends StatefulWidget {
   const ProfileDialog({super.key, required this.user});
@@ -160,14 +162,25 @@ class _UserAvatarAndName extends StatefulWidget {
 class _UserAvatarAndNameState extends State<_UserAvatarAndName> {
   late User user;
   late TextEditingController userNameController;
+
+  late ImagePicker picker;
+
+  Image? image;
   bool isEditing = false;
 
   @override
   void initState() {
     super.initState();
-
     user = widget.user;
     userNameController = TextEditingController(text: user.userName);
+
+    picker = ImagePicker();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    userNameController.dispose();
   }
 
   void edit() {
@@ -185,6 +198,13 @@ class _UserAvatarAndNameState extends State<_UserAvatarAndName> {
     // TODO: Call api to save new user
   }
 
+  void pickImage() async {
+    final pickedImage = await picker.pickImage(source: ImageSource.gallery);
+    if (pickedImage == null) return;
+
+    final bytes = pickedImage.readAsBytes();
+  }
+
   @override
   Widget build(BuildContext context) {
     if (isEditing) {
@@ -197,14 +217,39 @@ class _UserAvatarAndNameState extends State<_UserAvatarAndName> {
   Widget _buildEditing() {
     return Row(
       children: [
-        const CircleAvatar(
-          radius: 24,
-          child: Center(
-            child: Icon(
-              Icons.person_outline,
-              size: 32,
-            ),
-          ),
+        HoverBuilder(
+          cursor: SystemMouseCursors.click,
+          builder: (isHovered) {
+            return GestureDetector(
+              onTap: pickImage,
+              child: Stack(
+                children: [
+                  const CircleAvatar(
+                    radius: 24,
+                    child: Center(
+                      child: Icon(
+                        Icons.person_outline,
+                        size: 32,
+                      ),
+                    ),
+                  ),
+                  if (isHovered) ...[
+                    CircleAvatar(
+                      backgroundColor: Colors.black.withOpacity(0.5),
+                      radius: 24,
+                      child: const Center(
+                        child: Icon(
+                          Icons.add,
+                          size: 32,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ],
+                ],
+              ),
+            );
+          },
         ),
         const SizedBox(width: 12),
         Flexible(
