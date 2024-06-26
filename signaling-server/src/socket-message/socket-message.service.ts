@@ -37,6 +37,7 @@ export class SocketMessageService {
           break;
         case TypeSocketMessage.answer:
           await this.handleAnswer(client, messageJSON);
+          break;
         case TypeSocketMessage.chat:
           await this.handleChatMessage(client, messageJSON);
           break;
