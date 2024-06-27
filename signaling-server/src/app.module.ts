@@ -9,6 +9,7 @@ import { ConfigModule } from '@nestjs/config';
 import { RoomRedisModule } from './room-redis/room-redis.module';
 import { RoomSocketModule } from './room-socket/room-socket.module';
 import { AuthModule } from './auth/auth.module';
+import { ReportUserModule } from './report-user/report-user.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { AuthModule } from './auth/auth.module';
     RoomRedisModule,
     RoomSocketModule,
     AuthModule,
+    ReportUserModule,
   ],
 })
 export class AppModule {}

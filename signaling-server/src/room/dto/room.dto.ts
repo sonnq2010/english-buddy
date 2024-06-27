@@ -4,6 +4,8 @@ export class RoomDTO {
   roomId: string;
   user1?: string;
   user2?: string;
+  ipUser1?: string;
+  ipUser2?: string;
   isDeleted?: boolean;
 
   constructor(partial: Partial<RoomDTO>) {

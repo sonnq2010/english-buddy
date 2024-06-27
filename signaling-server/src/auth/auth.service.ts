@@ -6,6 +6,7 @@ import * as bcrypt from 'bcryptjs';
 import { ResponseData } from 'common/params/response.data';
 import { JwtService } from '@nestjs/jwt';
 import { Role } from './guard/role.enum';
+import { User } from '@prisma/client';
 
 @Injectable()
 export class AuthService {
@@ -113,6 +114,22 @@ export class AuthService {
       resData.hasError = true;
       resData.message = 'Have error when sign in. Please try again later!';
       throw error;
+    }
+  }
+
+  async findOne(userId: string): Promise<User> {
+    this.logger.log(`Find user ${userId}`);
+    try {
+      const user = await this.prismaService.user.findUnique({
+        where: {
+          userId,
+        },
+      });
+      if (user) delete user.password;
+      return user;
+    } catch (error) {
+      this.logger.error(`Error finding user ${userId} error: ${error}`);
+      return null;
     }
   }
 }
