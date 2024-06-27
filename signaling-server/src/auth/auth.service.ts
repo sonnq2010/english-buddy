@@ -5,6 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
 import * as bcrypt from 'bcryptjs';
 import { ResponseData } from 'common/params/response.data';
 import { JwtService } from '@nestjs/jwt';
+import { Role } from './guard/role.enum';
 
 @Injectable()
 export class AuthService {
@@ -93,7 +94,11 @@ export class AuthService {
           'Username or password is incorrect. Please try again!';
         return resData;
       }
-      const payload = { id: user.userId, username: user.username };
+      const payload = {
+        id: user.userId,
+        username: user.username,
+        role: user.isAdmin ? Role.Admin : Role.User,
+      };
       delete user.password;
       resData.appData = {
         ...user,
