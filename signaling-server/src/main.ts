@@ -8,6 +8,7 @@ import { Reflector } from '@nestjs/core';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  app.enableCors();
   app.useWebSocketAdapter(new WsAdapter(app));
   app.useGlobalPipes(new ValidationPipe());
   const reflector = app.get(Reflector);
