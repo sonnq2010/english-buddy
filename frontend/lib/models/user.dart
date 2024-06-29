@@ -15,10 +15,10 @@ class User {
     if (json.isEmpty) return null;
 
     return User(
-      id: json['id'] ?? '',
+      id: json['userId'] ?? '',
       userName: json['username'] ?? '',
       idToken: json['access_token'] ?? '',
-      isAdmin: bool.tryParse(json['isAdmin']) ?? false,
+      isAdmin: bool.tryParse(json['isAdmin'].toString()) ?? false,
     );
   }
 

@@ -19,7 +19,7 @@ class ApiResponse {
 
     return ApiResponse(
       hasError: json['hasError'] ?? false,
-      errorCode: int.tryParse(json['errorCode']) ?? 0,
+      errorCode: int.tryParse(json['errorCode'].toString()) ?? 0,
       message: json['message'] ?? '',
       data: json['appData'] ?? {},
     );
