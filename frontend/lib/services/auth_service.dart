@@ -26,9 +26,11 @@ class AuthService {
   }) async {
     userName = userName.trim();
     if (userName.isEmpty) return false;
+    if (userName.contains(' ')) return false;
 
     password = password.trim();
     if (password.isEmpty) return false;
+    if (password.contains(' ')) return false;
 
     if (confirmPassword != password) return false;
 
