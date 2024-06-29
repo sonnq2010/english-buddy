@@ -1,17 +1,34 @@
 class User {
-  User({
+  const User({
     required this.id,
     required this.userName,
     required this.idToken,
+    this.isAdmin = false,
   });
 
-  String id;
-  String userName;
-  String idToken;
+  final String id;
+  final String userName;
+  final String idToken;
+  final bool isAdmin;
 
-  void updateWith({
+  static User? fromJson(Map<String, dynamic> json) {
+    if (json.isEmpty) return null;
+
+    return User(
+      id: json['id'] ?? '',
+      userName: json['username'] ?? '',
+      idToken: json['access_token'] ?? '',
+      isAdmin: bool.tryParse(json['isAdmin']) ?? false,
+    );
+  }
+
+  User copyWith({
     String? userName,
   }) {
-    this.userName = userName ?? this.userName;
+    return User(
+      id: id,
+      userName: userName ?? this.userName,
+      idToken: idToken,
+    );
   }
 }

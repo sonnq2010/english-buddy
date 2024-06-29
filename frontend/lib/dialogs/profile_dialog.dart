@@ -191,7 +191,7 @@ class _UserAvatarAndNameState extends State<_UserAvatarAndName> {
 
   void save() {
     setState(() {
-      user.updateWith(userName: userNameController.text);
+      user = user.copyWith(userName: userNameController.text);
       isEditing = false;
     });
 

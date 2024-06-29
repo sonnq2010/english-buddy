@@ -1,6 +1,31 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
+class ApiResponse {
+  const ApiResponse({
+    required this.hasError,
+    required this.errorCode,
+    required this.message,
+    required this.data,
+  });
+
+  final bool hasError;
+  final int errorCode;
+  final String message;
+  final Map<String, dynamic> data;
+
+  static ApiResponse? fromJson(dynamic json) {
+    if (json is! Map<String, dynamic>) return null;
+
+    return ApiResponse(
+      hasError: json['hasError'] ?? false,
+      errorCode: int.tryParse(json['errorCode']) ?? 0,
+      message: json['message'] ?? '',
+      data: json['appData'] ?? {},
+    );
+  }
+}
+
 class ApiClient {
   ApiClient._singleton();
   static final _instance = ApiClient._singleton();
@@ -15,7 +40,7 @@ class ApiClient {
     );
   }
 
-  Future<Response> get(
+  Future<ApiResponse?> get(
     String path, {
     Map<String, dynamic>? queryParameters,
     String? idToken,
@@ -26,10 +51,10 @@ class ApiClient {
       queryParameters: queryParameters,
     );
 
-    return response;
+    return ApiResponse.fromJson(response.data);
   }
 
-  Future<Response> post(
+  Future<ApiResponse?> post(
     String path, {
     Object? body,
     String? idToken,
@@ -40,10 +65,10 @@ class ApiClient {
       options: makeOptions(idToken: idToken),
     );
 
-    return response;
+    return ApiResponse.fromJson(response.data);
   }
 
-  Future<Response> put(
+  Future<ApiResponse?> put(
     String path, {
     Object? body,
     String? idToken,
@@ -54,10 +79,10 @@ class ApiClient {
       options: makeOptions(idToken: idToken),
     );
 
-    return response;
+    return ApiResponse.fromJson(response.data);
   }
 
-  Future<Response> patch(
+  Future<ApiResponse?> patch(
     String path, {
     Object? body,
     String? idToken,
@@ -68,10 +93,10 @@ class ApiClient {
       options: makeOptions(idToken: idToken),
     );
 
-    return response;
+    return ApiResponse.fromJson(response.data);
   }
 
-  Future<Response> delete(
+  Future<ApiResponse?> delete(
     String path, {
     String? idToken,
   }) async {
@@ -80,6 +105,6 @@ class ApiClient {
       options: makeOptions(idToken: idToken),
     );
 
-    return response;
+    return ApiResponse.fromJson(response.data);
   }
 }

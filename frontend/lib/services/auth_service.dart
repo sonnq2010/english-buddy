@@ -10,32 +10,13 @@ class AuthService {
   User? _currentUser;
 
   Future<User?> getCurrentUser() async {
-    // TODO: Uncomment
+    if (_currentUser != null) return _currentUser;
 
-    // if (_currentUser != null) return _currentUser;
+    final token = await _repo.getToken();
+    if (token == null) return null;
 
-    // final token = await _repo.getToken();
-    // if (token == null) return null;
-
-    // _currentUser = User(id: '', userName: 'test', idToken: token);
-    // return _currentUser;
-
-    _currentUser = User(id: '', userName: 'test', idToken: '123');
+    _currentUser = User(id: '', userName: 'test', idToken: token);
     return _currentUser;
-  }
-
-  Future<bool> signIn({
-    required String userName,
-    required String password,
-  }) async {
-    userName = userName.trim();
-    if (userName.isEmpty) return false;
-
-    password = password.trim();
-    if (password.isEmpty) return false;
-
-    // TODO: Call API to sign in
-    return true;
   }
 
   Future<bool> signUp({
@@ -51,7 +32,23 @@ class AuthService {
 
     if (confirmPassword != password) return false;
 
-    // TODO: Call API to sign in
+    final user = await _repo.signUp(userName: userName, password: password);
+    if (user == null) return false;
+    return true;
+  }
+
+  Future<bool> signIn({
+    required String userName,
+    required String password,
+  }) async {
+    userName = userName.trim();
+    if (userName.isEmpty) return false;
+
+    password = password.trim();
+    if (password.isEmpty) return false;
+
+    final user = await _repo.signIn(userName: userName, password: password);
+    if (user == null) return false;
     return true;
   }
 }
