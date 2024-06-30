@@ -22,9 +22,20 @@ class SignInSignUpDialog extends StatefulWidget {
 class _SignInSignUpDialogState extends State<SignInSignUpDialog> {
   bool _isSignIn = true;
   String errorMessage = '';
+  String successMessage = '';
   final _userNameController = TextEditingController();
   final _passwordController = TextEditingController();
   final _comfirmPasswordController = TextEditingController();
+
+  void setErrorMessage(String message) {
+    errorMessage = message;
+    successMessage = '';
+  }
+
+  void setSuccessMessage(String message) {
+    successMessage = message;
+    errorMessage = '';
+  }
 
   Future<void> signIn() async {
     final ok = await AuthService.I.signIn(
@@ -33,7 +44,7 @@ class _SignInSignUpDialogState extends State<SignInSignUpDialog> {
     );
     if (!ok) {
       setState(() {
-        errorMessage = 'Wrong username or password';
+        setErrorMessage('Wrong username or password');
       });
       return;
     }
@@ -50,13 +61,17 @@ class _SignInSignUpDialogState extends State<SignInSignUpDialog> {
     );
     if (!ok) {
       setState(() {
-        errorMessage = 'Invalid sign up information';
+        setErrorMessage('Invalid sign up information');
       });
       return;
     }
-    if (!mounted) return;
 
-    Navigator.pop(context);
+    _passwordController.clear();
+    _comfirmPasswordController.clear();
+    setState(() {
+      setSuccessMessage("Sign up successfully! Please sign in again.");
+      _isSignIn = !_isSignIn;
+    });
   }
 
   @override
@@ -124,6 +139,11 @@ class _SignInSignUpDialogState extends State<SignInSignUpDialog> {
             Text(
               errorMessage,
               style: const TextStyle(color: Colors.red),
+            ),
+          if (successMessage.isNotEmpty)
+            Text(
+              successMessage,
+              style: const TextStyle(color: Colors.green),
             ),
           const SizedBox(height: 8),
           GestureDetector(
