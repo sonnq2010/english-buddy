@@ -10,17 +10,17 @@ class AuthRepo {
   static const _key = 'id_token';
   static const _basePath = '/auth';
 
-  static Future<String?> getToken() async {
+  Future<String?> getToken() async {
     final pref = await SharedPreferences.getInstance();
     return pref.getString(_key);
   }
 
-  static Future<void> putToken(String token) async {
+  Future<void> putToken(String token) async {
     final pref = await SharedPreferences.getInstance();
     await pref.setString(_key, token);
   }
 
-  static Future<void> deleteToken(String token) async {
+  Future<void> deleteToken(String token) async {
     final pref = await SharedPreferences.getInstance();
     await pref.remove(_key);
   }

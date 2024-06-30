@@ -13,7 +13,7 @@ class AuthService {
   Future<String?> getIdToken() async {
     if (_currentToken != null) return _currentToken;
 
-    final token = await AuthRepo.getToken();
+    final token = await _repo.getToken();
     if (token == null) return null;
 
     _currentToken = token;
@@ -23,7 +23,7 @@ class AuthService {
   Future<User?> getCurrentUser() async {
     if (_currentUser != null) return _currentUser;
 
-    final token = await AuthRepo.getToken();
+    final token = await _repo.getToken();
     if (token == null) return null;
 
     _currentUser = User(id: '', userName: 'test', idToken: token);
