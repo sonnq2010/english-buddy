@@ -1,32 +1,30 @@
 import 'package:frontend/models/user.dart';
 import 'package:frontend/repositories/auth_repo.dart';
+import 'package:frontend/repositories/user_repo.dart';
 
 class AuthService {
   AuthService._();
   static final _instance = AuthService._();
   static AuthService get I => _instance;
 
-  final _repo = const AuthRepo();
+  final _authRepo = const AuthRepo();
+  final _userRepo = const UserRepo();
   User? _currentUser;
-  String? _currentToken;
 
   Future<String?> getIdToken() async {
-    if (_currentToken != null) return _currentToken;
+    if (_currentUser != null) return _currentUser!.idToken;
 
-    final token = await _repo.getToken();
-    if (token == null) return null;
-
-    _currentToken = token;
-    return _currentToken;
+    final user = await getCurrentUser();
+    return user?.idToken;
   }
 
   Future<User?> getCurrentUser() async {
     if (_currentUser != null) return _currentUser;
 
-    final token = await _repo.getToken();
-    if (token == null) return null;
+    final user = await _userRepo.getCurrentUser();
+    if (user == null) return null;
 
-    _currentUser = User(id: '', userName: 'test', idToken: token);
+    _currentUser = user;
     return _currentUser;
   }
 
@@ -45,7 +43,7 @@ class AuthService {
 
     if (confirmPassword != password) return false;
 
-    final user = await _repo.signUp(userName: userName, password: password);
+    final user = await _authRepo.signUp(userName: userName, password: password);
     if (user == null) return false;
     return true;
   }
@@ -60,8 +58,10 @@ class AuthService {
     password = password.trim();
     if (password.isEmpty) return false;
 
-    final user = await _repo.signIn(userName: userName, password: password);
+    final user = await _authRepo.signIn(userName: userName, password: password);
     if (user == null) return false;
+
+    await _userRepo.putCurrentUser(user);
     return true;
   }
 }

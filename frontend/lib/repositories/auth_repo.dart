@@ -2,28 +2,11 @@ import 'dart:convert';
 
 import 'package:frontend/models/user.dart';
 import 'package:frontend/repositories/api_client.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthRepo {
   const AuthRepo();
 
-  static const _key = 'id_token';
   static const _basePath = '/auth';
-
-  Future<String?> getToken() async {
-    final pref = await SharedPreferences.getInstance();
-    return pref.getString(_key);
-  }
-
-  Future<void> putToken(String token) async {
-    final pref = await SharedPreferences.getInstance();
-    await pref.setString(_key, token);
-  }
-
-  Future<void> deleteToken(String token) async {
-    final pref = await SharedPreferences.getInstance();
-    await pref.remove(_key);
-  }
 
   Future<User?> signUp({
     required String userName,
