@@ -1,10 +1,10 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service';
-import { CreateUserDto, LoginUserDto } from './DTO/auth.dto';
-import { v4 as uuidv4 } from 'uuid';
+import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcryptjs';
 import { ResponseData } from 'common/params/response.data';
-import { JwtService } from '@nestjs/jwt';
+import { v4 as uuidv4 } from 'uuid';
+import { PrismaService } from '../prisma/prisma.service';
+import { CreateUserDto, LoginUserDto } from './DTO/auth.dto';
 import { Role } from './guard/role.enum';
 
 @Injectable()
@@ -83,6 +83,13 @@ export class AuthService {
           username: loginUserDto.username,
         },
       });
+      if (!user) {
+        this.logger.warn(`User ${loginUserDto.username} is not existed`);
+        resData.hasError = true;
+        resData.message = 'User is not existed!';
+        return resData;
+      }
+
       const pwdMatches = await bcrypt.compare(
         loginUserDto.password,
         user.password,

@@ -3,7 +3,7 @@ import 'dart:developer';
 
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:frontend/constants.dart';
-import 'package:frontend/service/web_socket_service.dart';
+import 'package:frontend/services/web_socket_service.dart';
 
 class WebSocketMessage {
   const WebSocketMessage(this.type, this.data);
