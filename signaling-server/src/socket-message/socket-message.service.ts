@@ -21,7 +21,7 @@ export class SocketMessageService {
       const messageJSON: SocketMessageDTO = JSON.parse(message);
       switch (messageJSON.type) {
         case TypeSocketMessage.join:
-          await this.handleJoinRoom(client);
+          await this.handleJoinRoom(client, messageJSON.data.clientIP);
           break;
         case TypeSocketMessage.stop:
           await this.handleLeaveRoom(client);
@@ -71,11 +71,13 @@ export class SocketMessageService {
 
   async handleJoinRoom(
     client: WebSocket,
+    clientIP?: string,
     roomIdJoined?: string,
   ): Promise<string> {
     this.logger.log(
       `joinRoom clientId ${client.id}, roomIdJoined ${roomIdJoined}`,
     );
+    client.remoteAddress = clientIP;
     let roomEmpty = await this.roomService.findRoomEmpty(
       client.id,
       roomIdJoined,
@@ -126,6 +128,7 @@ export class SocketMessageService {
     // join new room for client another
     const roomIdNew = await this.handleJoinRoom(
       clientIdAnother,
+      clientIdAnother.remoteAddress,
       userInRoom.roomId,
     );
     return roomIdNew;
@@ -148,7 +151,7 @@ export class SocketMessageService {
     );
     const roomIdNew: string = await this.handleLeaveRoom(client);
     //send to another client in message
-    await this.handleJoinRoom(client, roomIdNew);
+    await this.handleJoinRoom(client, client.remoteAddress, roomIdNew);
   }
 
   // handleOffer

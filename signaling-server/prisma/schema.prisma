@@ -17,6 +17,8 @@ model Room {
   roomId      String      @id
   user1       String?   
   user2       String?
+  ipUser1     String?
+  ipUser2     String?
   isDeleted   Boolean  @default(false)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -29,4 +31,14 @@ model User {
   isAdmin     Boolean  @default(false)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+}
+
+model ReportUser {
+  reportId      Int   @id @default(autoincrement())
+  reporter      String
+  reportedUser  String?
+  reportedIP    String?
+  reason        String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 }
