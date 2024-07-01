@@ -1,3 +1,4 @@
+import 'package:dart_ipify/dart_ipify.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:frontend/models/web_socket_message.dart';
 import 'package:frontend/services/web_socket_service.dart';
@@ -13,8 +14,9 @@ class WebRTCService {
   final remoteVideoRenderer = RTCVideoRenderer();
 
   late MediaStream localMediaStream;
-
   late RTCPeerConnection localPeerConnection;
+
+  late String _ipAddress;
 
   final Map<String, dynamic> iceServers = {
     'iceServers': [
@@ -38,6 +40,10 @@ class WebRTCService {
   };
 
   Future<void> initialize() async {
+    Ipify.ipv4().then((value) {
+      _ipAddress = value;
+    });
+
     await localVideoRenderer.initialize();
     await remoteVideoRenderer.initialize();
 
@@ -73,7 +79,7 @@ class WebRTCService {
 
   Future<void> start() async {
     isStarted = true;
-    final message = WebSocketMessage.join();
+    final message = WebSocketMessage.join(ipAddress: _ipAddress);
     WebSocketService.I.sendMessage(message);
   }
 
