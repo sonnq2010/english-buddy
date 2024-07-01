@@ -1,10 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:frontend/service/report_service.dart';
-import 'package:frontend/widgets/chat_box.dart';
-import 'package:frontend/widgets/filter_bottom_sheet.dart';
-import 'package:frontend/widgets/video_view/my_video_view.dart';
-import 'package:frontend/widgets/video_view/other_video_view.dart';
+import 'package:frontend/screens/home_screen/widgets/chat_box.dart';
+import 'package:frontend/screens/home_screen/widgets/filter_bottom_sheet.dart';
+import 'package:frontend/screens/home_screen/widgets/video_view/my_video_view.dart';
+import 'package:frontend/screens/home_screen/widgets/video_view/other_video_view.dart';
 
 class HomeScreenForSmallAndMediumDevice extends StatelessWidget {
   const HomeScreenForSmallAndMediumDevice({super.key});
@@ -19,28 +18,13 @@ class HomeScreenForSmallAndMediumDevice extends StatelessWidget {
   }
 
   Widget _buildBody() {
-    return SafeArea(
+    return const SafeArea(
       child: Column(
         children: [
           Expanded(
-            child: Stack(
-              children: [
-                const OtherVideoView(useSwipe: true),
-                Positioned(
-                  top: 8,
-                  right: 8,
-                  child: IconButton(
-                    style: IconButton.styleFrom(
-                      backgroundColor: Colors.deepPurpleAccent.withOpacity(0.2),
-                    ),
-                    onPressed: ReportService.I.reportUser,
-                    icon: const Icon(Icons.report_outlined, size: 30),
-                  ),
-                ),
-              ],
-            ),
+            child: OtherVideoView(useSwipe: true),
           ),
-          const Expanded(
+          Expanded(
             child: MyVideoView(),
           ),
         ],

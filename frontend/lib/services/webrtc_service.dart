@@ -1,6 +1,6 @@
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:frontend/models/web_socket_message.dart';
-import 'package:frontend/service/web_socket_service.dart';
+import 'package:frontend/services/web_socket_service.dart';
 
 class WebRTCService {
   WebRTCService._singleton();

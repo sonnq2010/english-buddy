@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/constants.dart';
-import 'package:frontend/service/webrtc_service.dart';
-import 'package:frontend/widgets/control_buttons/skip_button.dart';
-import 'package:frontend/widgets/control_buttons/start_button.dart';
-import 'package:frontend/widgets/control_buttons/stop_button.dart';
-import 'package:frontend/widgets/video_view/video_view.dart';
+import 'package:frontend/screens/home_screen/widgets/control_buttons/skip_button.dart';
+import 'package:frontend/screens/home_screen/widgets/control_buttons/start_button.dart';
+import 'package:frontend/screens/home_screen/widgets/control_buttons/stop_button.dart';
+import 'package:frontend/services/report_service.dart';
+import 'package:frontend/services/webrtc_service.dart';
+import 'package:frontend/widgets/video_view.dart';
 
 class OtherVideoView extends StatelessWidget {
   const OtherVideoView({super.key, this.useSwipe = false});
@@ -13,11 +14,29 @@ class OtherVideoView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (!useSwipe) {
-      return VideoView(videoRenderer: WebRTCService.I.remoteVideoRenderer);
-    }
-
-    return const DismissableOtherVideoView();
+    return Stack(
+      children: [
+        if (!useSwipe)
+          VideoView(videoRenderer: WebRTCService.I.remoteVideoRenderer)
+        else
+          const DismissableOtherVideoView(),
+        Positioned(
+          top: 8,
+          right: 8,
+          child: IconButton(
+            style: IconButton.styleFrom(
+              backgroundColor: Colors.deepPurpleAccent.withOpacity(0.2),
+            ),
+            onPressed: ReportService.I.reportUser,
+            icon: const Icon(
+              Icons.report_outlined,
+              size: 30,
+              color: Colors.white,
+            ),
+          ),
+        ),
+      ],
+    );
   }
 }
 
