@@ -5,22 +5,20 @@ import 'package:frontend/constants.dart';
 import 'package:frontend/screens/home_screen/widgets/control_buttons/control_buttons.dart';
 import 'package:frontend/screens/home_screen/widgets/control_buttons/dropdown_button.dart';
 
-class ControllButtonsAndFilters extends StatelessWidget {
-  const ControllButtonsAndFilters({super.key});
+class ControlButtonsArea extends StatelessWidget {
+  const ControlButtonsArea({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(border: Border.all()),
-      child: Column(
+      child: const Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Expanded(
+          Expanded(
             child: FittedBox(child: ControlButtons()),
           ),
-          const SizedBox(height: 16),
-          Expanded(child: _buildFilters()),
         ],
       ),
     );
