@@ -42,6 +42,7 @@ dependencies:
   shared_preferences: ^2.2.3
   image_picker: ^1.1.2
   dart_ipify: ^1.1.1
+  get: ^4.6.6
 
 dev_dependencies:
   flutter_test:

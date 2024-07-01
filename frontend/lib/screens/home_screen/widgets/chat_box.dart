@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:frontend/models/message.dart';
 import 'package:frontend/services/chat_service.dart';
+import 'package:frontend/services/webrtc_service.dart';
 
 class ChatBox extends StatefulWidget {
   const ChatBox({super.key, this.forBottomSheet = false});
@@ -135,7 +136,9 @@ class _ChatBoxState extends State<ChatBox> {
     );
   }
 
-  void _submit(String message) {
+  void _submit(String message) async {
+    if (!WebRTCService.I.isConnected) return;
+
     message = message.trim();
     if (message.isEmpty) return;
 

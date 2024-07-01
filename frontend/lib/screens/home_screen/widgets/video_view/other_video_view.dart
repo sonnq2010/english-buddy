@@ -6,6 +6,7 @@ import 'package:frontend/screens/home_screen/widgets/control_buttons/stop_button
 import 'package:frontend/services/report_service.dart';
 import 'package:frontend/services/webrtc_service.dart';
 import 'package:frontend/widgets/video_view.dart';
+import 'package:get/get_state_manager/get_state_manager.dart';
 
 class OtherVideoView extends StatelessWidget {
   const OtherVideoView({super.key, this.useSwipe = false});
@@ -23,17 +24,20 @@ class OtherVideoView extends StatelessWidget {
         Positioned(
           top: 8,
           right: 8,
-          child: IconButton(
-            style: IconButton.styleFrom(
-              backgroundColor: Colors.deepPurpleAccent.withOpacity(0.2),
-            ),
-            onPressed: ReportService.I.reportUser,
-            icon: const Icon(
-              Icons.report_outlined,
-              size: 30,
-              color: Colors.white,
-            ),
-          ),
+          child: Obx(() {
+            if (!WebRTCService.I.isConnected) return const SizedBox.shrink();
+            return IconButton(
+              style: IconButton.styleFrom(
+                backgroundColor: Colors.deepPurpleAccent.withOpacity(0.2),
+              ),
+              onPressed: ReportService.I.reportUser,
+              icon: const Icon(
+                Icons.report_outlined,
+                size: 30,
+                color: Colors.white,
+              ),
+            );
+          }),
         ),
       ],
     );
