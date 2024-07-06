@@ -10,6 +10,7 @@ import { RoomRedisModule } from './room-redis/room-redis.module';
 import { RoomSocketModule } from './room-socket/room-socket.module';
 import { AuthModule } from './auth/auth.module';
 import { ReportUserModule } from './report-user/report-user.module';
+import { ProfileModule } from './profile/profile.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { ReportUserModule } from './report-user/report-user.module';
     RoomSocketModule,
     AuthModule,
     ReportUserModule,
+    ProfileModule,
   ],
 })
 export class AppModule {}

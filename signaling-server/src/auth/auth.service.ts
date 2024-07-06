@@ -7,11 +7,13 @@ import { PrismaService } from '../prisma/prisma.service';
 import { CreateUserDto, LoginUserDto } from './DTO/auth.dto';
 import { Role } from './guard/role.enum';
 import { User } from '@prisma/client';
+import { ProfileService } from 'profile/profile.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly prismaService: PrismaService,
+    private readonly profileService: ProfileService,
     private readonly jwtService: JwtService,
   ) {}
   private readonly logger = new Logger(AuthService.name);
@@ -42,6 +44,10 @@ export class AuthService {
           password: hash,
         },
       });
+      await this.profileService.createProfile(
+        createUserDto.userId,
+        createUserDto.username,
+      );
       delete user.password;
       resData.appData = user;
       resData.message = 'User registered successfully';
@@ -108,8 +114,10 @@ export class AuthService {
         role: user.isAdmin ? Role.Admin : Role.User,
       };
       delete user.password;
+      const profile = await this.profileService.getProfile(user.userId);
       resData.appData = {
         ...user,
+        profile,
         access_token: await this.jwtService.signAsync(payload),
       };
       resData.message = 'User signed in successfully';
