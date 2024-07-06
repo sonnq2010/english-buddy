@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/constants.dart';
+import 'package:frontend/dialogs/report_reason_dialog.dart';
 import 'package:frontend/screens/home_screen/widgets/control_buttons/skip_button.dart';
 import 'package:frontend/screens/home_screen/widgets/control_buttons/start_button.dart';
 import 'package:frontend/screens/home_screen/widgets/control_buttons/stop_button.dart';
@@ -12,6 +13,11 @@ class OtherVideoView extends StatelessWidget {
   const OtherVideoView({super.key, this.useSwipe = false});
 
   final bool useSwipe;
+
+  void report(BuildContext context) async {
+    final reason = await ReportReasonDialog.show(context);
+    ReportService.I.reportUser(reason: reason);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +36,7 @@ class OtherVideoView extends StatelessWidget {
               style: IconButton.styleFrom(
                 backgroundColor: Colors.deepPurpleAccent.withOpacity(0.2),
               ),
-              onPressed: ReportService.I.reportUser,
+              onPressed: () => report(context),
               icon: const Icon(
                 Icons.report_outlined,
                 size: 30,
