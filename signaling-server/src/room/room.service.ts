@@ -55,6 +55,7 @@ export class RoomService {
       const roomDTO = new RoomDTO({
         roomId: uuidv4(),
         user1: client.id,
+        ipUser1: client.remoteAddress,
       });
       const room: RoomDTO = await this.create(roomDTO);
       await this.roomRedisService.addClientToRoomRedis(room.roomId, client.id);
@@ -91,6 +92,7 @@ export class RoomService {
       const roomDTO = await this.update({
         roomId,
         user2: client.id,
+        ipUser2: client.remoteAddress,
       });
       await this.roomRedisService.addClientToRoomRedis(roomId, client.id);
       this.roomSocketService.addClientToSocketMessageRooms(roomId, client);

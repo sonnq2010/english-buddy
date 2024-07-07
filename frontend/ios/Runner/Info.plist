@@ -51,5 +51,7 @@
 	<string>For Microphone Usage!</string>
 	<key>NSSpeechRecognitionUsageDescription</key>
 	<string>For Speech Recognition!</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>For Library Usage!</string>
 </dict>
 </plist>

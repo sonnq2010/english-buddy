@@ -14,6 +14,7 @@ export class DataSocketMessageDTO {
   candidates?: NonNullable<unknown>;
   answer?: NonNullable<unknown>;
   message?: string;
+  clientIP?: string;
 }
 
 export enum TypeSocketMessage {
