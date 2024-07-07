@@ -29,10 +29,13 @@ class WebSocketMessage {
     );
   }
 
-  factory WebSocketMessage.join() {
+  factory WebSocketMessage.join({required String ipAddress}) {
     return WebSocketMessage(
       WebSocketMessageType.join,
-      WebSocketData(clientId: WebSocketService.I.clientId),
+      WebSocketData(
+        clientId: WebSocketService.I.clientId,
+        ipAddress: ipAddress,
+      ),
     );
   }
 
@@ -120,6 +123,7 @@ class WebSocketData {
     this.answer,
     this.candidates,
     this.message,
+    this.ipAddress,
   });
 
   final String? clientId; // Socket ID
@@ -128,6 +132,7 @@ class WebSocketData {
   final Map<String, dynamic>? answer; // Answer SDP
   final Map<String, dynamic>? candidates; // ICE candidates
   final String? message; // Chat message
+  final String? ipAddress; // IP address
 
   factory WebSocketData.fromJson(Map json) {
     return WebSocketData(
@@ -148,6 +153,7 @@ class WebSocketData {
     if (answer != null) json['answer'] = answer;
     if (candidates != null) json['candidates'] = candidates;
     if (message != null) json['message'] = message;
+    if (ipAddress != null) json['clientIP'] = ipAddress;
     return json;
   }
 }

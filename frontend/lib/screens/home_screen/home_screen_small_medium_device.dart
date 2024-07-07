@@ -1,7 +1,5 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/screens/home_screen/widgets/chat_box.dart';
-import 'package:frontend/screens/home_screen/widgets/filter_bottom_sheet.dart';
 import 'package:frontend/screens/home_screen/widgets/video_view/my_video_view.dart';
 import 'package:frontend/screens/home_screen/widgets/video_view/other_video_view.dart';
 
@@ -58,25 +56,6 @@ class HomeScreenForSmallAndMediumDevice extends StatelessWidget {
             );
           },
           child: const Icon(Icons.message_outlined),
-        ),
-        if (kIsWeb) const SizedBox(width: 16),
-        FloatingActionButton(
-          mini: true,
-          onPressed: () {
-            showModalBottomSheet(
-              context: context,
-              shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(16),
-                  topRight: Radius.circular(16),
-                ),
-              ),
-              builder: (context) {
-                return const FilterBottomSheet();
-              },
-            );
-          },
-          child: const Icon(Icons.settings_outlined),
         ),
       ],
     );

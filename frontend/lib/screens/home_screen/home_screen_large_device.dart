@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/screens/home_screen/widgets/chat_box.dart';
-import 'package:frontend/screens/home_screen/widgets/control_buttons_and_filters.dart';
+import 'package:frontend/screens/home_screen/widgets/control_buttons_area.dart';
 import 'package:frontend/screens/home_screen/widgets/video_view/my_video_view.dart';
 import 'package:frontend/screens/home_screen/widgets/video_view/other_video_view.dart';
 
@@ -38,7 +38,7 @@ class HomeScreenForLargeDevice extends StatelessWidget {
       child: Row(
         children: [
           Expanded(
-            child: ControllButtonsAndFilters(),
+            child: ControlButtonsArea(),
           ),
           Expanded(
             child: ChatBox(),

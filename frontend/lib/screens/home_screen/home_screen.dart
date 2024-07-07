@@ -33,7 +33,7 @@ class _HomeScreenState extends State<HomeScreen> {
       builder: (context, orientation) {
         final width = MediaQuery.of(context).size.width;
 
-        if (width <= 992) {
+        if (width <= 600) {
           return const HomeScreenForSmallAndMediumDevice();
         }
 
