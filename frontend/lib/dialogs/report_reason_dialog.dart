@@ -64,21 +64,25 @@ class _ReportReasonDialogState extends State<ReportReasonDialog> {
             ),
           ),
           const SizedBox(height: 24),
-          ElevatedButton(
-            onPressed: report,
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Theme.of(context).primaryColor,
-              minimumSize: const Size.fromHeight(40),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              ElevatedButton(
+                onPressed: report,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Theme.of(context).primaryColor,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+                child: Text(
+                  'Report',
+                  style: TextStyle(
+                    color: Theme.of(context).secondaryHeaderColor,
+                  ),
+                ),
               ),
-            ),
-            child: Text(
-              'Submit',
-              style: TextStyle(
-                color: Theme.of(context).secondaryHeaderColor,
-              ),
-            ),
+            ],
           ),
         ],
       ),
