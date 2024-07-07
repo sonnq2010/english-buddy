@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:frontend/constants.dart';
 import 'package:frontend/models/user.dart';
 import 'package:frontend/screens/home_screen/widgets/control_buttons/dropdown_button.dart';
+import 'package:frontend/services/user_services.dart';
+import 'package:frontend/utils/image_util.dart';
 import 'package:frontend/widgets/hover_builder.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -27,6 +29,53 @@ class ProfileDialog extends StatefulWidget {
 }
 
 class _ProfileDialogState extends State<ProfileDialog> {
+  late User user;
+
+  @override
+  void initState() {
+    super.initState();
+    user = widget.user;
+  }
+
+  void save() {
+    UserService.I.updateProfile(user);
+    Navigator.pop(context);
+  }
+
+  void onUserNameAndAvatarChanged(User newUser) {
+    setState(() {
+      user = newUser;
+    });
+  }
+
+  void onGenderChanged(Gender? gender) {
+    if (gender == null) return;
+    setState(() {
+      user = user.copyWith(gender: gender.name);
+    });
+  }
+
+  void onExpectedGenderChanged(Gender? gender) {
+    if (gender == null) return;
+    setState(() {
+      user = user.copyWith(expectedGender: gender.name);
+    });
+  }
+
+  void onLevelChanged(EnglishLevel? level) {
+    if (level == null) return;
+    setState(() {
+      user = user.copyWith(level: level.name);
+    });
+  }
+
+  void onExpectedLevelChanged(EnglishLevel? level) {
+    if (level == null) return;
+    setState(() {
+      user = user.copyWith(expectedLevel: level.name);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -50,7 +99,10 @@ class _ProfileDialogState extends State<ProfileDialog> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _UserAvatarAndName(user: widget.user),
+          _UserAvatarAndName(
+            user: user,
+            onChanged: onUserNameAndAvatarChanged,
+          ),
           const SizedBox(height: 24),
           const Text(
             'Settings',
@@ -68,12 +120,13 @@ class _ProfileDialogState extends State<ProfileDialog> {
               ),
               const SizedBox(width: 8),
               CustomizeDropdownButton<Gender>(
+                initialValue: Gender.fromString(user.profile.gender),
                 values: const {
                   Gender.all: '',
                   Gender.male: 'Male',
                   Gender.female: 'Female',
                 },
-                onChanged: (value) {},
+                onChanged: onGenderChanged,
               ),
             ],
           ),
@@ -87,13 +140,13 @@ class _ProfileDialogState extends State<ProfileDialog> {
               ),
               const SizedBox(width: 8),
               CustomizeDropdownButton<Gender>(
-                initialValue: Gender.all,
+                initialValue: Gender.fromString(user.profile.expectedGender),
                 values: const {
                   Gender.all: '',
                   Gender.male: 'Male',
                   Gender.female: 'Female',
                 },
-                onChanged: (value) {},
+                onChanged: onExpectedGenderChanged,
               ),
             ],
           ),
@@ -107,6 +160,7 @@ class _ProfileDialogState extends State<ProfileDialog> {
               ),
               const SizedBox(width: 8),
               CustomizeDropdownButton<EnglishLevel>(
+                initialValue: EnglishLevel.fromString(user.profile.level),
                 values: const {
                   EnglishLevel.all: '',
                   EnglishLevel.a1: 'A1',
@@ -116,7 +170,7 @@ class _ProfileDialogState extends State<ProfileDialog> {
                   EnglishLevel.c1: 'C1',
                   EnglishLevel.c2: 'C2',
                 },
-                onChanged: (value) {},
+                onChanged: onLevelChanged,
               ),
             ],
           ),
@@ -130,7 +184,9 @@ class _ProfileDialogState extends State<ProfileDialog> {
               ),
               const SizedBox(width: 8),
               CustomizeDropdownButton<EnglishLevel>(
-                initialValue: EnglishLevel.all,
+                initialValue: EnglishLevel.fromString(
+                  user.profile.expectedLevel,
+                ),
                 values: const {
                   EnglishLevel.all: '',
                   EnglishLevel.a1: 'A1',
@@ -140,7 +196,28 @@ class _ProfileDialogState extends State<ProfileDialog> {
                   EnglishLevel.c1: 'C1',
                   EnglishLevel.c2: 'C2',
                 },
-                onChanged: (value) {},
+                onChanged: onExpectedLevelChanged,
+              ),
+            ],
+          ),
+          const SizedBox(height: 24),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              ElevatedButton(
+                onPressed: save,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Theme.of(context).primaryColor,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+                child: Text(
+                  'Save',
+                  style: TextStyle(
+                    color: Theme.of(context).secondaryHeaderColor,
+                  ),
+                ),
               ),
             ],
           ),
@@ -151,9 +228,13 @@ class _ProfileDialogState extends State<ProfileDialog> {
 }
 
 class _UserAvatarAndName extends StatefulWidget {
-  const _UserAvatarAndName({required this.user});
+  const _UserAvatarAndName({
+    required this.user,
+    required this.onChanged,
+  });
 
   final User user;
+  final void Function(User user) onChanged;
 
   @override
   State<_UserAvatarAndName> createState() => _UserAvatarAndNameState();
@@ -162,19 +243,21 @@ class _UserAvatarAndName extends StatefulWidget {
 class _UserAvatarAndNameState extends State<_UserAvatarAndName> {
   late User user;
   late TextEditingController userNameController;
-
   late ImagePicker picker;
 
-  Image? image;
+  Image? userAvatar;
   bool isEditing = false;
 
   @override
   void initState() {
     super.initState();
     user = widget.user;
-    userNameController = TextEditingController(text: user.userName);
-
+    userNameController = TextEditingController(text: user.profile.name);
     picker = ImagePicker();
+
+    if (user.profile.avatar != null) {
+      userAvatar = ImageUtil.imageFromBase64String(user.profile.avatar!);
+    }
   }
 
   @override
@@ -191,18 +274,23 @@ class _UserAvatarAndNameState extends State<_UserAvatarAndName> {
 
   void save() {
     setState(() {
-      user = user.copyWith(userName: userNameController.text);
+      user = user.copyWith(name: userNameController.text);
       isEditing = false;
     });
-
-    // TODO: Call api to save new user
+    widget.onChanged(user);
   }
 
   void pickImage() async {
     final pickedImage = await picker.pickImage(source: ImageSource.gallery);
     if (pickedImage == null) return;
 
-    final bytes = pickedImage.readAsBytes();
+    final bytes = await pickedImage.readAsBytes();
+    final base64String = ImageUtil.base64StringFromBytes(bytes);
+
+    setState(() {
+      userAvatar = ImageUtil.imageFromBase64String(base64String);
+      user = user.copyWith(avatar: base64String);
+    });
   }
 
   @override
@@ -224,15 +312,25 @@ class _UserAvatarAndNameState extends State<_UserAvatarAndName> {
               onTap: pickImage,
               child: Stack(
                 children: [
-                  const CircleAvatar(
-                    radius: 24,
-                    child: Center(
-                      child: Icon(
-                        Icons.person_outline,
-                        size: 32,
+                  if (userAvatar == null) ...[
+                    const CircleAvatar(
+                      radius: 24,
+                      child: Center(
+                        child: Icon(
+                          Icons.person_outline,
+                          size: 32,
+                        ),
                       ),
                     ),
-                  ),
+                  ] else ...[
+                    CircleAvatar(
+                      radius: 24,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(100),
+                        child: Center(child: userAvatar),
+                      ),
+                    ),
+                  ],
                   if (isHovered) ...[
                     CircleAvatar(
                       backgroundColor: Colors.black.withOpacity(0.5),
@@ -274,18 +372,28 @@ class _UserAvatarAndNameState extends State<_UserAvatarAndName> {
   Widget _buildReadonly() {
     return Row(
       children: [
-        const CircleAvatar(
-          radius: 24,
-          child: Center(
-            child: Icon(
-              Icons.person_outline,
-              size: 32,
+        if (userAvatar == null) ...[
+          const CircleAvatar(
+            radius: 24,
+            child: Center(
+              child: Icon(
+                Icons.person_outline,
+                size: 32,
+              ),
             ),
           ),
-        ),
+        ] else ...[
+          CircleAvatar(
+            radius: 24,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(100),
+              child: Center(child: userAvatar),
+            ),
+          ),
+        ],
         const SizedBox(width: 12),
         Text(
-          user.userName,
+          user.profile.name,
           style: const TextStyle(fontSize: 20),
         ),
         const Spacer(),
