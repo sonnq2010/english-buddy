@@ -5,5 +5,8 @@ class Message {
   });
 
   final String content;
+
+  // If [isMe] equal true, the message will be rendered
+  // on the right side
   final bool isMe;
 }
