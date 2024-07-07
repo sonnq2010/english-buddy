@@ -9,23 +9,15 @@ class AuthService {
 
   final _authRepo = const AuthRepo();
   final _userRepo = const UserRepo();
-  User? _currentUser;
 
   Future<String?> getIdToken() async {
-    if (_currentUser != null) return _currentUser!.idToken;
-
     final user = await getCurrentUser();
     return user?.idToken;
   }
 
   Future<User?> getCurrentUser() async {
-    if (_currentUser != null) return _currentUser;
-
     final user = await _userRepo.getCurrentUser();
-    if (user == null) return null;
-
-    _currentUser = user;
-    return _currentUser;
+    return user;
   }
 
   Future<bool> signUp({
