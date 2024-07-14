@@ -1,3 +1,5 @@
+import 'package:frontend/constants.dart';
+
 class UpdateProfileDto {
   const UpdateProfileDto({
     this.name,
@@ -26,10 +28,26 @@ class UpdateProfileDto {
     final json = <String, dynamic>{};
     json['name'] = name;
     json['avatar'] = avatar;
-    json['gender'] = gender;
-    json['filterGender'] = expectedGender;
-    json['englishLevel'] = level;
-    json['filterEnglishLevel'] = expectedLevel;
+    if (gender == Gender.all.name) {
+      json['gender'] = null;
+    } else {
+      json['gender'] = gender;
+    }
+    if (expectedGender == Gender.all.name) {
+      json['filterGender'] = null;
+    } else {
+      json['filterGender'] = expectedGender;
+    }
+    if (level == EnglishLevel.all.name) {
+      json['englishLevel'] = null;
+    } else {
+      json['englishLevel'] = level;
+    }
+    if (expectedLevel == EnglishLevel.all.name) {
+      json['filterEnglishLevel'] = null;
+    } else {
+      json['filterEnglishLevel'] = expectedLevel;
+    }
     return json;
   }
 }
