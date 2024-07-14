@@ -4,9 +4,11 @@ import 'package:frontend/dialogs/report_reason_dialog.dart';
 import 'package:frontend/screens/home_screen/widgets/control_buttons/skip_button.dart';
 import 'package:frontend/screens/home_screen/widgets/control_buttons/start_button.dart';
 import 'package:frontend/screens/home_screen/widgets/control_buttons/stop_button.dart';
+import 'package:frontend/services/cc_service.dart';
 import 'package:frontend/services/report_service.dart';
 import 'package:frontend/services/webrtc_service.dart';
 import 'package:frontend/widgets/video_view.dart';
+import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 
 class OtherVideoView extends StatelessWidget {
@@ -45,6 +47,34 @@ class OtherVideoView extends StatelessWidget {
               ),
             );
           }),
+        ),
+        Positioned(
+          bottom: 8,
+          left: 8,
+          right: 8,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Flexible(
+                child: Obx(
+                  () {
+                    if (CCService.I.cc.isEmpty) return const SizedBox();
+
+                    return Container(
+                      padding: const EdgeInsets.all(8),
+                      color: Colors.black.withOpacity(0.45),
+                      child: Text(
+                        CCService.I.cc.value,
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(color: Colors.white),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
         ),
       ],
     );
