@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:dart_ipify/dart_ipify.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:frontend/models/web_socket_message.dart';
+import 'package:frontend/services/speech_recognitor.dart';
 import 'package:frontend/services/web_socket_service.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 
@@ -94,6 +95,7 @@ class WebRTCService {
     remoteVideoRenderer.srcObject = null;
     final message = WebSocketMessage.skip();
     WebSocketService.I.sendMessage(message);
+    SpeechRecognitor.I.stopListen();
   }
 
   Future<void> stop() async {
@@ -101,6 +103,7 @@ class WebRTCService {
     remoteVideoRenderer.srcObject = null;
     final message = WebSocketMessage.stop();
     WebSocketService.I.sendMessage(message);
+    SpeechRecognitor.I.stopListen();
   }
 
   // Create and send offer
@@ -137,6 +140,7 @@ class WebRTCService {
       description['type'],
     );
     localPeerConnection.setRemoteDescription(offer);
+    SpeechRecognitor.I.startListen();
   }
 
   Future<void> handleRemoteCandidates(Map<String, dynamic>? candidate) async {
@@ -153,10 +157,12 @@ class WebRTCService {
 
   Future<void> handleRemoteSkipped() async {
     remoteVideoRenderer.srcObject = null;
+    SpeechRecognitor.I.stopListen();
   }
 
   Future<void> handleRemoteStopped() async {
     remoteVideoRenderer.srcObject = null;
+    SpeechRecognitor.I.stopListen();
   }
 
   Future<RTCSessionDescription> _createOffer() async {

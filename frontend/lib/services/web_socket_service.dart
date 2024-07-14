@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:frontend/constants.dart';
 import 'package:frontend/models/web_socket_message.dart';
+import 'package:frontend/services/cc_service.dart';
 import 'package:frontend/services/chat_service.dart';
 import 'package:frontend/services/webrtc_service.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
@@ -79,6 +80,10 @@ class WebSocketService {
 
       case WebSocketMessageType.chat:
         ChatService.I.onNewMessage(wsMessage);
+        break;
+
+      case WebSocketMessageType.cc:
+        CCService.I.handleRemoteCC(wsMessage);
         break;
 
       case WebSocketMessageType.unknown:

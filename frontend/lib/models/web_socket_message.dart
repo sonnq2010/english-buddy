@@ -103,6 +103,17 @@ class WebSocketMessage {
     );
   }
 
+  factory WebSocketMessage.cc(String cc) {
+    return WebSocketMessage(
+      WebSocketMessageType.cc,
+      WebSocketData(
+        clientId: WebSocketService.I.clientId,
+        roomId: WebSocketService.I.roomId,
+        cc: cc,
+      ),
+    );
+  }
+
   Map<String, dynamic> toJson() {
     return {
       'type': type.name,
@@ -124,6 +135,7 @@ class WebSocketData {
     this.candidates,
     this.message,
     this.ipAddress,
+    this.cc,
   });
 
   final String? clientId; // Socket ID
@@ -133,6 +145,7 @@ class WebSocketData {
   final Map<String, dynamic>? candidates; // ICE candidates
   final String? message; // Chat message
   final String? ipAddress; // IP address
+  final String? cc; // CC Speech to Text
 
   factory WebSocketData.fromJson(Map json) {
     return WebSocketData(
@@ -142,6 +155,7 @@ class WebSocketData {
       answer: json['answer'],
       candidates: json['candidates'],
       message: json['message'],
+      cc: json['cc'],
     );
   }
 
@@ -154,6 +168,7 @@ class WebSocketData {
     if (candidates != null) json['candidates'] = candidates;
     if (message != null) json['message'] = message;
     if (ipAddress != null) json['clientIP'] = ipAddress;
+    if (cc != null) json['cc'] = cc;
     return json;
   }
 }

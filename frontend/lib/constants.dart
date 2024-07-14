@@ -55,6 +55,7 @@ enum WebSocketMessageType {
   skip,
   stop,
   chat,
+  cc,
   unknown;
 
   static WebSocketMessageType fromString(String type) {
@@ -75,6 +76,8 @@ enum WebSocketMessageType {
         return stop;
       case 'chat':
         return chat;
+      case 'cc':
+        return cc;
       default:
         return unknown;
     }

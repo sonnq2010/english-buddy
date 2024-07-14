@@ -15,6 +15,7 @@ export class DataSocketMessageDTO {
   answer?: NonNullable<unknown>;
   message?: string;
   clientIP?: string;
+  cc?: string;
 }
 
 export enum TypeSocketMessage {
@@ -26,4 +27,5 @@ export enum TypeSocketMessage {
   skip = 'skip',
   stop = 'stop',
   chat = 'chat',
+  cc = 'cc',
 }

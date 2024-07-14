@@ -4,6 +4,7 @@ import 'package:frontend/dialogs/report_reason_dialog.dart';
 import 'package:frontend/screens/home_screen/widgets/control_buttons/skip_button.dart';
 import 'package:frontend/screens/home_screen/widgets/control_buttons/start_button.dart';
 import 'package:frontend/screens/home_screen/widgets/control_buttons/stop_button.dart';
+import 'package:frontend/services/cc_service.dart';
 import 'package:frontend/services/report_service.dart';
 import 'package:frontend/services/webrtc_service.dart';
 import 'package:frontend/widgets/video_view.dart';
@@ -23,10 +24,11 @@ class OtherVideoView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        if (!useSwipe)
+        if (!useSwipe) ...[
           VideoView(videoRenderer: WebRTCService.I.remoteVideoRenderer)
-        else
+        ] else ...[
           const DismissableOtherVideoView(),
+        ],
         Positioned(
           top: 8,
           right: 8,
@@ -44,6 +46,57 @@ class OtherVideoView extends StatelessWidget {
               ),
             );
           }),
+        ),
+        Positioned(
+          bottom: 8,
+          left: 8,
+          right: 8,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              // Flexible(
+              //   child: ObxValue(
+              //     (cc) {
+              //       if (cc.value.isEmpty) return const SizedBox();
+
+              //       return Container(
+              //         padding: const EdgeInsets.all(8),
+              //         color: Colors.black.withOpacity(0.45),
+              //         child: Text(
+              //           cc.value,
+              //           textAlign: TextAlign.center,
+              //           style: const TextStyle(color: Colors.white),
+              //         ),
+              //       );
+              //     },
+              //     CCService.I.cc,
+              //   ),
+              // ),
+              Flexible(
+                child: StreamBuilder(
+                  stream: CCService.I.ccStream,
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData) return const SizedBox.shrink();
+                    if (snapshot.hasError) return const SizedBox.shrink();
+
+                    final ccString = snapshot.data ?? '';
+                    if (ccString.isEmpty) return const SizedBox.shrink();
+
+                    return Container(
+                      padding: const EdgeInsets.all(8),
+                      color: Colors.black.withOpacity(0.45),
+                      child: Text(
+                        ccString,
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(color: Colors.white),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
         ),
       ],
     );
