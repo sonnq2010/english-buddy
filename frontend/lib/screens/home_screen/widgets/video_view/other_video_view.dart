@@ -23,10 +23,11 @@ class OtherVideoView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        if (!useSwipe)
+        if (!useSwipe) ...[
           VideoView(videoRenderer: WebRTCService.I.remoteVideoRenderer)
-        else
+        ] else ...[
           const DismissableOtherVideoView(),
+        ],
         Positioned(
           top: 8,
           right: 8,
