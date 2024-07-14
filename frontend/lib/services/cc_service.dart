@@ -10,9 +10,14 @@ class CCService {
   final _ccStreamController = StreamController<String>.broadcast();
   Stream<String> get ccStream => _ccStreamController.stream;
 
+  String _lastCC = '';
+
   void handleRemoteCC(WebSocketMessage message) {
     final ccString = message.data.cc ?? '';
+    if (ccString == _lastCC) return;
+
     _ccStreamController.add(ccString);
+    _lastCC = ccString;
   }
 
   void clearCC() {
