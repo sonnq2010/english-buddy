@@ -9,10 +9,16 @@ class SpeechRecognitor {
   static SpeechRecognitor get I => _instance;
 
   final _speech = stt.SpeechToText();
+  String _lastResult = '';
 
   Future<void> initialize() async {
     await _speech.initialize(
-      onStatus: (status) => log(status.toString()),
+      onStatus: (status) {
+        log(status.toString());
+        if (status == 'notListening') {
+          startListen();
+        }
+      },
       onError: (error) => log(error.errorMsg),
     );
   }
@@ -30,7 +36,25 @@ class SpeechRecognitor {
     _speech.stop();
   }
 
-  void _onResult(SpeechRecognitionResult result) {
-    log(result.recognizedWords);
+  void _onResult(SpeechRecognitionResult recognitionResult) {
+    final result = recognitionResult.recognizedWords;
+    if (result == _lastResult) return;
+
+    final minifiedResult = minifyRecognizedWords(result);
+    log(minifiedResult);
+    // TODO: Send to socket
+
+    _lastResult = result;
+  }
+
+  // Minify to last 10 words
+  String minifyRecognizedWords(String recognizedWords) {
+    final tokens = recognizedWords.split(' ');
+    if (tokens.length <= 10) {
+      return tokens.join(' ');
+    }
+
+    final minifiedTokens = tokens.sublist(tokens.length - 10);
+    return minifiedTokens.join(' ');
   }
 }
