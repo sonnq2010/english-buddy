@@ -23,6 +23,7 @@ class SpeechRecognitor {
         }
       },
       onError: (error) => log(error.errorMsg),
+      finalTimeout: const Duration(minutes: 1),
     );
   }
 

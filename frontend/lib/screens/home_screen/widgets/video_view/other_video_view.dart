@@ -8,7 +8,6 @@ import 'package:frontend/services/cc_service.dart';
 import 'package:frontend/services/report_service.dart';
 import 'package:frontend/services/webrtc_service.dart';
 import 'package:frontend/widgets/video_view.dart';
-import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 
 class OtherVideoView extends StatelessWidget {
@@ -56,16 +55,39 @@ class OtherVideoView extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              // Flexible(
+              //   child: ObxValue(
+              //     (cc) {
+              //       if (cc.value.isEmpty) return const SizedBox();
+
+              //       return Container(
+              //         padding: const EdgeInsets.all(8),
+              //         color: Colors.black.withOpacity(0.45),
+              //         child: Text(
+              //           cc.value,
+              //           textAlign: TextAlign.center,
+              //           style: const TextStyle(color: Colors.white),
+              //         ),
+              //       );
+              //     },
+              //     CCService.I.cc,
+              //   ),
+              // ),
               Flexible(
-                child: Obx(
-                  () {
-                    if (CCService.I.cc.isEmpty) return const SizedBox();
+                child: StreamBuilder(
+                  stream: CCService.I.ccStream,
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData) return const SizedBox.shrink();
+                    if (snapshot.hasError) return const SizedBox.shrink();
+
+                    final ccString = snapshot.data ?? '';
+                    if (ccString.isEmpty) return const SizedBox.shrink();
 
                     return Container(
                       padding: const EdgeInsets.all(8),
                       color: Colors.black.withOpacity(0.45),
                       child: Text(
-                        CCService.I.cc.value,
+                        ccString,
                         textAlign: TextAlign.center,
                         style: const TextStyle(color: Colors.white),
                       ),

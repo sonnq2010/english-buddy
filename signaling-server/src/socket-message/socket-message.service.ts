@@ -1,10 +1,10 @@
 import { Injectable, Logger } from '@nestjs/common';
+import { RoomSocketService } from 'room-socket/room-socket.service';
+import { RoomDTO } from 'room/dto/room.dto';
 import { v4 as uuidv4 } from 'uuid';
 import { WebSocket } from 'ws';
 import { RoomService } from '../room/room.service';
 import { SocketMessageDTO, TypeSocketMessage } from './dto/socket.dto';
-import { RoomDTO } from 'room/dto/room.dto';
-import { RoomSocketService } from 'room-socket/room-socket.service';
 
 @Injectable()
 export class SocketMessageService {
@@ -40,6 +40,9 @@ export class SocketMessageService {
           break;
         case TypeSocketMessage.chat:
           await this.handleChatMessage(client, messageJSON);
+          break;
+        case TypeSocketMessage.cc:
+          await this.handleCC(client, messageJSON);
           break;
         default:
           break;
@@ -227,6 +230,25 @@ export class SocketMessageService {
       data: {
         roomId,
         message,
+      },
+    });
+    await this.sendMessageForAnotherInRoom(
+      client,
+      roomId,
+      JSON.stringify(socketMessageDTO),
+    );
+  }
+
+  async handleCC(client: WebSocket, socketMessage: SocketMessageDTO) {
+    this.logger.log(
+      `handle cc clientId ${client.id} message ${JSON.stringify(socketMessage)}`,
+    );
+    const { roomId, cc } = socketMessage.data;
+    const socketMessageDTO = new SocketMessageDTO({
+      type: TypeSocketMessage.cc,
+      data: {
+        roomId,
+        cc,
       },
     });
     await this.sendMessageForAnotherInRoom(

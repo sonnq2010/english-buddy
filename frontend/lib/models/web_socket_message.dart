@@ -105,7 +105,7 @@ class WebSocketMessage {
 
   factory WebSocketMessage.cc(String cc) {
     return WebSocketMessage(
-      WebSocketMessageType.chat,
+      WebSocketMessageType.cc,
       WebSocketData(
         clientId: WebSocketService.I.clientId,
         roomId: WebSocketService.I.roomId,

@@ -83,7 +83,7 @@ class WebSocketService {
         break;
 
       case WebSocketMessageType.cc:
-        CCService.I.handleRemoteCC(message);
+        CCService.I.handleRemoteCC(wsMessage);
         break;
 
       case WebSocketMessageType.unknown:
