@@ -15,9 +15,16 @@ class Profile {
   final String? level;
   final String? expectedLevel;
 
-  factory Profile.fromJson(Map<String, dynamic> json) {
+  factory Profile.fromJson(
+    Map<String, dynamic>? json, {
+    String? userName,
+  }) {
+    if (json == null) {
+      return Profile(name: userName ?? '');
+    }
+
     return Profile(
-      name: json['name'],
+      name: json['name'] ?? userName,
       avatar: json['avatar'],
       gender: json['gender'],
       expectedGender: json['filterGender'],
@@ -68,7 +75,10 @@ class User {
       userName: json['username'] ?? '',
       idToken: json['access_token'] ?? '',
       isAdmin: bool.tryParse(json['isAdmin'].toString()) ?? false,
-      profile: Profile.fromJson(json['profile']),
+      profile: Profile.fromJson(
+        json['profile'],
+        userName: json['username'] ?? '',
+      ),
     );
   }
 
