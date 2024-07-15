@@ -89,13 +89,18 @@ class WebRTCService {
     isStarted = true;
     final message = WebSocketMessage.join(ipAddress: _ipAddress);
     WebSocketService.I.sendMessage(message);
+    SpeechRecognitor.I.startListen();
   }
 
   Future<void> skip() async {
     remoteVideoRenderer.srcObject = null;
     final message = WebSocketMessage.skip();
     WebSocketService.I.sendMessage(message);
-    SpeechRecognitor.I.stopListen();
+    SpeechRecognitor.I.stopListen().then(
+      (_) {
+        SpeechRecognitor.I.startListen();
+      },
+    );
   }
 
   Future<void> stop() async {
@@ -140,7 +145,6 @@ class WebRTCService {
       description['type'],
     );
     localPeerConnection.setRemoteDescription(offer);
-    SpeechRecognitor.I.startListen();
   }
 
   Future<void> handleRemoteCandidates(Map<String, dynamic>? candidate) async {

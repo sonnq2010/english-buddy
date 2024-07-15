@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:frontend/models/web_socket_message.dart';
 import 'package:frontend/services/cc_service.dart';
 import 'package:frontend/services/web_socket_service.dart';
+import 'package:frontend/services/webrtc_service.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 
@@ -18,12 +19,12 @@ class SpeechRecognitor {
     await _speech.initialize(
       onStatus: (status) {
         log(status.toString());
-        if (status == 'notListening') {
-          startListen(clearCC: false);
+        if (_speech.isNotListening && WebRTCService.I.isConnected) {
+          stopListen(clearCC: false).then((_) => startListen(clearCC: false));
         }
       },
       onError: (error) => log(error.errorMsg),
-      finalTimeout: const Duration(minutes: 1),
+      finalTimeout: const Duration(minutes: 10),
     );
   }
 
@@ -38,12 +39,14 @@ class SpeechRecognitor {
     if (clearCC) CCService.I.clearCC();
   }
 
-  Future<void> stopListen() async {
+  Future<void> stopListen({bool clearCC = true}) async {
     _speech.stop();
-    CCService.I.clearCC();
+    if (clearCC) CCService.I.clearCC();
   }
 
   void _onResult(SpeechRecognitionResult recognitionResult) {
+    if (!WebRTCService.I.isConnected) return;
+
     final result = recognitionResult.recognizedWords;
     if (result == _lastResult) return;
 
