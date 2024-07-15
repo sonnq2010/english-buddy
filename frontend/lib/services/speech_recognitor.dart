@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:flutter/foundation.dart';
 import 'package:frontend/models/web_socket_message.dart';
 import 'package:frontend/services/cc_service.dart';
 import 'package:frontend/services/web_socket_service.dart';
@@ -29,8 +30,10 @@ class SpeechRecognitor {
   }
 
   Future<void> startListen({bool clearCC = true}) async {
+    debugPrint('started listening');
     _speech.listen(
       onResult: _onResult,
+      localeId: 'en_US',
       listenOptions: stt.SpeechListenOptions(
         partialResults: true,
       ),
@@ -45,14 +48,17 @@ class SpeechRecognitor {
   }
 
   void _onResult(SpeechRecognitionResult recognitionResult) {
+    debugPrint('received result');
     if (!WebRTCService.I.isConnected) return;
 
     final result = recognitionResult.recognizedWords;
+    debugPrint('result: $result');
     if (result == _lastResult) return;
 
     final minifiedResult = minifyRecognizedWords(result);
     final message = WebSocketMessage.cc(minifiedResult);
     WebSocketService.I.sendMessage(message);
+    debugPrint('result sended to socket');
 
     _lastResult = result;
   }
