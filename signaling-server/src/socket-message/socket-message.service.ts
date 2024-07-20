@@ -119,22 +119,29 @@ export class SocketMessageService {
       },
     });
     //send to client another
-    const clientIdAnother = await this.sendMessageForAnotherInRoom(
+    // const clientIdAnother = await this.sendMessageForAnotherInRoom(
+    //   client,
+    //   userInRoom.roomId,
+    //   JSON.stringify(socketMessageDTO),
+    // );
+
+    await this.sendMessageForAnotherInRoom(
       client,
       userInRoom.roomId,
       JSON.stringify(socketMessageDTO),
     );
+
     // remove room
     await this.roomService.removeRoom(userInRoom.roomId);
 
-    if (!clientIdAnother) return null;
-    // join new room for client another
-    const roomIdNew = await this.handleJoinRoom(
-      clientIdAnother,
-      clientIdAnother.remoteAddress,
-      userInRoom.roomId,
-    );
-    return roomIdNew;
+    // if (!clientIdAnother) return null;
+    // // join new room for client another
+    // const roomIdNew = await this.handleJoinRoom(
+    //   clientIdAnother,
+    //   clientIdAnother.remoteAddress,
+    //   userInRoom.roomId,
+    // );
+    // return roomIdNew;
   }
 
   async handleSkipRoom(client: WebSocket, roomId: string) {
@@ -152,9 +159,13 @@ export class SocketMessageService {
       roomId,
       JSON.stringify(socketMessageDTO),
     );
-    const roomIdNew: string = await this.handleLeaveRoom(client);
+
+    // remove room
+    await this.roomService.removeRoom(roomId);
+    // const roomIdNew: string = await this.handleLeaveRoom(client);
+
     //send to another client in message
-    await this.handleJoinRoom(client, client.remoteAddress, roomIdNew);
+    // await this.handleJoinRoom(client, client.remoteAddress, roomIdNew);
   }
 
   // handleOffer
