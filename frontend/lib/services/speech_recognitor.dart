@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:flutter/foundation.dart';
@@ -16,10 +17,14 @@ class SpeechRecognitor {
   final _speech = stt.SpeechToText();
   String _lastResult = '';
 
+  bool _isStarted = false;
+
+  late Timer _timer;
+
   Future<void> initialize() async {
     await _speech.initialize(
       onStatus: (status) {
-        log(status.toString());
+        debugPrint(status.toString());
         if (_speech.isNotListening && WebRTCService.I.isConnected) {
           stopListen(clearCC: false).then((_) => startListen(clearCC: false));
         }
@@ -27,28 +32,55 @@ class SpeechRecognitor {
       onError: (error) => log(error.errorMsg),
       finalTimeout: const Duration(minutes: 10),
     );
+
+    _timer = Timer.periodic(const Duration(seconds: 2), (timer) async {
+      if (!_isStarted) return;
+      if (!WebRTCService.I.isConnected) return;
+
+      if (_speech.isNotListening) {
+        try {
+          await startListen();
+        } catch (e) {
+          debugPrint('Try listen failed');
+        }
+      }
+    });
   }
 
   void dispose() {
     _speech.cancel();
+    _timer.cancel();
   }
 
   Future<void> startListen({bool clearCC = true}) async {
+    if (_isStarted) return;
+
+    _isStarted = true;
+    if (clearCC) CCService.I.clearCC();
+
     debugPrint('started listening');
-    _speech.listen(
+    await _speech.listen(
       onResult: _onResult,
       localeId: 'en_US',
+      listenFor: const Duration(minutes: 5),
       listenOptions: stt.SpeechListenOptions(
         partialResults: true,
+        cancelOnError: true,
       ),
     );
-
-    if (clearCC) CCService.I.clearCC();
   }
 
   Future<void> stopListen({bool clearCC = true}) async {
-    _speech.stop();
+    if (!_isStarted) return;
+
+    _isStarted = false;
     if (clearCC) CCService.I.clearCC();
+    await _speech.stop();
+  }
+
+  Future<void> restart() async {
+    await stopListen();
+    await startListen();
   }
 
   void _onResult(SpeechRecognitionResult recognitionResult) {
