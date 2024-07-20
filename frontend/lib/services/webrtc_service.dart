@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:dart_ipify/dart_ipify.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:frontend/models/web_socket_message.dart';
+import 'package:frontend/services/chat_service.dart';
 import 'package:frontend/services/speech_recognitor.dart';
 import 'package:frontend/services/web_socket_service.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
@@ -93,9 +94,11 @@ class WebRTCService {
   }
 
   Future<void> skip() async {
+    localPeerConnection.close();
     remoteVideoRenderer.srcObject = null;
     final message = WebSocketMessage.skip();
     WebSocketService.I.sendMessage(message);
+    ChatService.I.clearMessages();
     SpeechRecognitor.I.stopListen().then(
       (_) {
         SpeechRecognitor.I.startListen();
@@ -105,8 +108,10 @@ class WebRTCService {
 
   Future<void> stop() async {
     isStarted = false;
+    localPeerConnection.close();
     remoteVideoRenderer.srcObject = null;
     final message = WebSocketMessage.stop();
+    ChatService.I.clearMessages();
     WebSocketService.I.sendMessage(message);
     SpeechRecognitor.I.stopListen();
   }
@@ -161,11 +166,13 @@ class WebRTCService {
 
   Future<void> handleRemoteSkipped() async {
     remoteVideoRenderer.srcObject = null;
+    ChatService.I.clearMessages();
     SpeechRecognitor.I.stopListen();
   }
 
   Future<void> handleRemoteStopped() async {
     remoteVideoRenderer.srcObject = null;
+    ChatService.I.clearMessages();
     SpeechRecognitor.I.stopListen();
   }
 

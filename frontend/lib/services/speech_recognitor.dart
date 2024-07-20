@@ -29,6 +29,10 @@ class SpeechRecognitor {
     );
   }
 
+  void dispose() {
+    _speech.cancel();
+  }
+
   Future<void> startListen({bool clearCC = true}) async {
     debugPrint('started listening');
     _speech.listen(

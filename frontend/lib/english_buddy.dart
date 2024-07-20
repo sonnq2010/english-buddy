@@ -32,6 +32,7 @@ class _EnglishBuddyState extends State<EnglishBuddy> {
     super.dispose();
     WebSocketService.I.dispose();
     WebRTCService.I.dispose();
+    SpeechRecognitor.I.dispose();
   }
 
   Future<void> loadEnv() async {
