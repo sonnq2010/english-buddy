@@ -25,9 +25,6 @@ class SpeechRecognitor {
     await _speech.initialize(
       onStatus: (status) {
         debugPrint(status.toString());
-        if (_speech.isNotListening && WebRTCService.I.isConnected) {
-          stopListen(clearCC: false).then((_) => startListen(clearCC: false));
-        }
       },
       onError: (error) => log(error.errorMsg),
       finalTimeout: const Duration(minutes: 10),
