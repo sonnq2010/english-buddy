@@ -9,6 +9,11 @@ class UserService {
 
   final _repo = const UserRepo();
 
+  Future<User?> getCurrentUser() async {
+    final user = await _repo.getCurrentUser();
+    return user;
+  }
+
   Future<void> updateProfile(User user) async {
     final profile = user.profile;
     final dto = UpdateProfileDto(

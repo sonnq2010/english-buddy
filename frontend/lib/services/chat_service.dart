@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:frontend/models/message.dart';
 import 'package:frontend/models/web_socket_message.dart';
+import 'package:frontend/services/user_services.dart';
 import 'package:frontend/services/web_socket_service.dart';
 
 class ChatService {
@@ -15,11 +16,15 @@ class ChatService {
   final List<Message> _messages = [];
   List<Message> get messages => _messages.reversed.toList();
 
-  void send(String message) {
+  void send(String message) async {
     _messages.add(Message(content: message, isMe: true));
 
     // Send message to socket
-    final webSocketMessage = WebSocketMessage.chat(message);
+    final user = await UserService.I.getCurrentUser();
+    final webSocketMessage = WebSocketMessage.chat(
+      message,
+      avatar: user?.profile.avatar,
+    );
     WebSocketService.I.sendMessage(webSocketMessage);
   }
 
@@ -27,7 +32,12 @@ class ChatService {
     final messageString = message.data.message ?? '';
     if (messageString.isEmpty) return;
 
-    final chatMessage = Message(content: messageString, isMe: false);
+    final chatMessage = Message(
+      content: messageString,
+      avatar: message.data.avatar,
+      isMe: false,
+    );
+
     _messages.add(chatMessage);
     _messageStreamController.add(chatMessage);
   }

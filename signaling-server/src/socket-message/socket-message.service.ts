@@ -235,18 +235,18 @@ export class SocketMessageService {
     this.logger.log(
       `handleChatMessage clientId ${client.id} message ${JSON.stringify(socketMessage)}`,
     );
-    const { roomId, message } = socketMessage.data;
-    const socketMessageDTO = new SocketMessageDTO({
-      type: TypeSocketMessage.chat,
-      data: {
-        roomId,
-        message,
-      },
-    });
+    // const { roomId, message } = socketMessage.data.roomId;
+    // const socketMessageDTO = new SocketMessageDTO({
+    //   type: TypeSocketMessage.chat,
+    //   data: {
+    //     roomId,
+    //     message,
+    //   },
+    // });
     await this.sendMessageForAnotherInRoom(
       client,
-      roomId,
-      JSON.stringify(socketMessageDTO),
+      socketMessage.data.roomId,
+      JSON.stringify(socketMessage),
     );
   }
 

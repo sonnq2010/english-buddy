@@ -1,10 +1,22 @@
+import 'package:frontend/services/user_services.dart';
+
 class Message {
-  const Message({
+  Message({
     required this.content,
-    required this.isMe,
-  });
+    String? avatar,
+    this.isMe = true,
+  }) {
+    if (isMe) {
+      UserService.I.getCurrentUser().then((user) {
+        this.avatar = user?.profile.avatar;
+      });
+    } else {
+      this.avatar = avatar;
+    }
+  }
 
   final String content;
+  String? avatar;
 
   // If [isMe] equal true, the message will be rendered
   // on the right side
