@@ -92,13 +92,17 @@ class WebSocketMessage {
     );
   }
 
-  factory WebSocketMessage.chat(String message) {
+  factory WebSocketMessage.chat(
+    String message, {
+    String? avatar,
+  }) {
     return WebSocketMessage(
       WebSocketMessageType.chat,
       WebSocketData(
         clientId: WebSocketService.I.clientId,
         roomId: WebSocketService.I.roomId,
         message: message,
+        avatar: avatar,
       ),
     );
   }
@@ -134,6 +138,7 @@ class WebSocketData {
     this.answer,
     this.candidates,
     this.message,
+    this.avatar,
     this.ipAddress,
     this.cc,
   });
@@ -144,6 +149,7 @@ class WebSocketData {
   final Map<String, dynamic>? answer; // Answer SDP
   final Map<String, dynamic>? candidates; // ICE candidates
   final String? message; // Chat message
+  final String? avatar;
   final String? ipAddress; // IP address
   final String? cc; // CC Speech to Text
 
@@ -155,6 +161,7 @@ class WebSocketData {
       answer: json['answer'],
       candidates: json['candidates'],
       message: json['message'],
+      avatar: json['avatar'],
       cc: json['cc'],
     );
   }
@@ -167,6 +174,7 @@ class WebSocketData {
     if (answer != null) json['answer'] = answer;
     if (candidates != null) json['candidates'] = candidates;
     if (message != null) json['message'] = message;
+    if (avatar != null) json['avatar'] = avatar;
     if (ipAddress != null) json['clientIP'] = ipAddress;
     if (cc != null) json['cc'] = cc;
     return json;

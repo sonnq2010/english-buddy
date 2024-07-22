@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/dialogs/profile_dialog.dart';
 import 'package:frontend/dialogs/sign_in_sign_up_dialog.dart';
-import 'package:frontend/services/auth_service.dart';
+import 'package:frontend/services/user_services.dart';
 import 'package:frontend/services/webrtc_service.dart';
 import 'package:frontend/widgets/video_view.dart';
 
@@ -21,7 +21,7 @@ class MyVideoView extends StatelessWidget {
               backgroundColor: Colors.deepPurpleAccent.withOpacity(0.2),
             ),
             onPressed: () {
-              AuthService.I.getCurrentUser().then((currentUser) {
+              UserService.I.getCurrentUser().then((currentUser) {
                 if (currentUser == null) {
                   SignInSignUpDialog.show(context);
                   return;

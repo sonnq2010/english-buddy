@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:frontend/models/message.dart';
@@ -63,7 +64,7 @@ class _ChatBoxState extends State<ChatBox> {
         itemCount: _messages.length,
         itemBuilder: (context, index) {
           final message = _messages[index];
-          final avatar = _buildAvatar();
+          final avatar = _buildAvatar(message.avatar);
           final content = _buildContent(message.content);
 
           return _getLayoutForMessage(
@@ -110,10 +111,20 @@ class _ChatBoxState extends State<ChatBox> {
     );
   }
 
-  Widget _buildAvatar() {
-    return const CircleAvatar(
-      radius: 20,
-      child: Center(child: Icon(Icons.person_outline)),
+  Widget _buildAvatar(String? avatar) {
+    if (avatar == null) {
+      return const CircleAvatar(
+        radius: 20,
+        child: Center(child: Icon(Icons.person_outline)),
+      );
+    }
+
+    final imageBytes = base64Decode(avatar);
+    return CircleAvatar(
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(20),
+        child: Image.memory(imageBytes),
+      ),
     );
   }
 

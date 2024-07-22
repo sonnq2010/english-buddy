@@ -1,8 +1,11 @@
 import 'dart:async';
 
 import 'package:dart_ipify/dart_ipify.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:frontend/models/web_socket_message.dart';
+import 'package:frontend/services/chat_service.dart';
 import 'package:frontend/services/speech_recognitor.dart';
 import 'package:frontend/services/web_socket_service.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
@@ -30,7 +33,11 @@ class WebRTCService {
 
   final Map<String, dynamic> iceServers = {
     'iceServers': [
-      {'url': 'stun:stun.l.google.com:19302'}
+      {
+        'urls': dotenv.env['TURN_URL'],
+        'username': dotenv.env['TURN_USERNAME'],
+        'credential': dotenv.env['TURN_CREDENTIAL']
+      },
     ]
   };
 
@@ -62,17 +69,6 @@ class WebRTCService {
 
     localMediaStream = mediaStream;
     localVideoRenderer.srcObject = mediaStream;
-
-    localPeerConnection = await createPeerConnection(iceServers, _config);
-    localPeerConnection.onConnectionState = _onConnectionState;
-    localPeerConnection.onIceCandidate = _onIceCandidate;
-    localPeerConnection.onAddStream = _onAddStream;
-    localPeerConnection.onTrack = _onTrack;
-
-    // Send local media stream and tracks to the other side
-    localMediaStream.getTracks().forEach((track) async {
-      await localPeerConnection.addTrack(track, localMediaStream);
-    });
   }
 
   Future<void> dispose() async {
@@ -86,6 +82,7 @@ class WebRTCService {
   }
 
   Future<void> start() async {
+    debugPrint('Start');
     isStarted = true;
     final message = WebSocketMessage.join(ipAddress: _ipAddress);
     WebSocketService.I.sendMessage(message);
@@ -93,21 +90,45 @@ class WebRTCService {
 
   Future<void> skip() async {
     remoteVideoRenderer.srcObject = null;
+    await localPeerConnection.close();
+
     final message = WebSocketMessage.skip();
     WebSocketService.I.sendMessage(message);
-    SpeechRecognitor.I.stopListen();
+
+    ChatService.I.clearMessages();
+
+    start();
   }
 
   Future<void> stop() async {
     isStarted = false;
     remoteVideoRenderer.srcObject = null;
+    await localPeerConnection.close();
+
     final message = WebSocketMessage.stop();
     WebSocketService.I.sendMessage(message);
+
+    ChatService.I.clearMessages();
     SpeechRecognitor.I.stopListen();
+  }
+
+  Future<void> initPeerConnection() async {
+    localPeerConnection = await createPeerConnection(iceServers, _config);
+    localPeerConnection.onConnectionState = _onConnectionState;
+    localPeerConnection.onIceCandidate = _onIceCandidate;
+    localPeerConnection.onAddStream = _onAddStream;
+    localPeerConnection.onTrack = _onTrack;
+
+    // Send local media stream and tracks to the other side
+    localMediaStream.getTracks().forEach((track) async {
+      await localPeerConnection.addTrack(track, localMediaStream);
+    });
   }
 
   // Create and send offer
   Future<void> sendOffer() async {
+    debugPrint('Send offer');
+    await initPeerConnection();
     final offer = await _createOffer();
     final message = WebSocketMessage.offer(offer);
     WebSocketService.I.sendMessage(message);
@@ -115,6 +136,7 @@ class WebRTCService {
 
   // Receive and accept offer, send back answer
   Future<void> handleRemoteOffer(Map<String, dynamic>? description) async {
+    debugPrint('Handle remote offer');
     if (description == null) return;
 
     // Accept offer
@@ -125,13 +147,17 @@ class WebRTCService {
     localPeerConnection.setRemoteDescription(offer);
 
     // Create create and send back
+    debugPrint('Create answer and send back');
     final answer = await _createAnswer();
     final message = WebSocketMessage.answer(answer);
     WebSocketService.I.sendMessage(message);
+
+    SpeechRecognitor.I.startListen();
   }
 
   // Receive and accept answer
   Future<void> handleRemoteAnswer(Map<String, dynamic>? description) async {
+    debugPrint('Handle remote answer');
     if (description == null) return;
 
     // Accept answer
@@ -144,6 +170,7 @@ class WebRTCService {
   }
 
   Future<void> handleRemoteCandidates(Map<String, dynamic>? candidate) async {
+    debugPrint('Handle remote candidate');
     if (candidate == null) return;
 
     final iceCandidate = RTCIceCandidate(
@@ -156,13 +183,19 @@ class WebRTCService {
   }
 
   Future<void> handleRemoteSkipped() async {
+    debugPrint('Remote skipped');
     remoteVideoRenderer.srcObject = null;
-    SpeechRecognitor.I.stopListen();
+    ChatService.I.clearMessages();
+
+    start();
   }
 
   Future<void> handleRemoteStopped() async {
+    debugPrint('Remote stopped');
     remoteVideoRenderer.srcObject = null;
-    SpeechRecognitor.I.stopListen();
+    ChatService.I.clearMessages();
+
+    start();
   }
 
   Future<RTCSessionDescription> _createOffer() async {
@@ -179,6 +212,7 @@ class WebRTCService {
 
   void _onConnectionState(RTCPeerConnectionState connectionState) {
     currentConnectionState.value = connectionState;
+    debugPrint(connectionState.toString());
   }
 
   void _onIceCandidate(RTCIceCandidate candidate) {
