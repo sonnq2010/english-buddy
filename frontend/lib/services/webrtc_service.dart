@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:dart_ipify/dart_ipify.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:frontend/models/web_socket_message.dart';
 import 'package:frontend/services/chat_service.dart';
@@ -32,7 +33,11 @@ class WebRTCService {
 
   final Map<String, dynamic> iceServers = {
     'iceServers': [
-      {'url': 'stun:stun.l.google.com:19302'}
+      {
+        'urls': dotenv.env['TURN_URL'],
+        'username': dotenv.env['TURN_USERNAME'],
+        'credential': dotenv.env['TURN_CREDENTIAL']
+      },
     ]
   };
 
