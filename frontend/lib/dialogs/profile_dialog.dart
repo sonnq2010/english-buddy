@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:frontend/constants.dart';
 import 'package:frontend/models/user.dart';
 import 'package:frontend/screens/home_screen/widgets/control_buttons/dropdown_button.dart';
+import 'package:frontend/services/auth_service.dart';
 import 'package:frontend/services/user_services.dart';
+import 'package:frontend/services/webrtc_service.dart';
 import 'package:frontend/utils/image_util.dart';
 import 'package:frontend/widgets/hover_builder.dart';
 import 'package:image_picker/image_picker.dart';
@@ -35,6 +37,12 @@ class _ProfileDialogState extends State<ProfileDialog> {
   void initState() {
     super.initState();
     user = widget.user;
+  }
+
+  void signOut() {
+    AuthService.I.signOut();
+    WebRTCService.I.tryStop();
+    Navigator.pop(context);
   }
 
   void save() {
@@ -204,6 +212,22 @@ class _ProfileDialogState extends State<ProfileDialog> {
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
+              ElevatedButton(
+                onPressed: signOut,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Theme.of(context).primaryColor,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+                child: Text(
+                  'Sign out',
+                  style: TextStyle(
+                    color: Theme.of(context).secondaryHeaderColor,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 8),
               ElevatedButton(
                 onPressed: save,
                 style: ElevatedButton.styleFrom(

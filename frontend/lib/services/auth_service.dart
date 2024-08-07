@@ -50,4 +50,8 @@ class AuthService {
     await _userRepo.putCurrentUser(user);
     return true;
   }
+
+  Future<void> signOut() async {
+    await _userRepo.deleteToken();
+  }
 }

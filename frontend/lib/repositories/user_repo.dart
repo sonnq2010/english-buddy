@@ -91,7 +91,7 @@ class UserRepo {
     await pref.setString(_tokenKey, token);
   }
 
-  Future<void> deleteToken(String token) async {
+  Future<void> deleteToken() async {
     final pref = await SharedPreferences.getInstance();
     await pref.remove(_tokenKey);
   }

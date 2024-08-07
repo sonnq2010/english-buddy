@@ -31,7 +31,7 @@ class WebRTCService {
         RTCPeerConnectionState.RTCPeerConnectionStateConnected;
   }
 
-  final Map<String, dynamic> iceServers = {
+  final Map<String, dynamic> _iceServers = {
     'iceServers': [
       {
         'urls': dotenv.env['TURN_URL'],
@@ -112,8 +112,13 @@ class WebRTCService {
     SpeechRecognitor.I.stopListen();
   }
 
+  Future<void> tryStop() async {
+    if (!isStarted) return;
+    stop();
+  }
+
   Future<void> initPeerConnection() async {
-    localPeerConnection = await createPeerConnection(iceServers, _config);
+    localPeerConnection = await createPeerConnection(_iceServers, _config);
     localPeerConnection.onConnectionState = _onConnectionState;
     localPeerConnection.onIceCandidate = _onIceCandidate;
     localPeerConnection.onAddStream = _onAddStream;
