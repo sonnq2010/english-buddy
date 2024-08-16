@@ -1,23 +1,23 @@
-import 'dart:async';
-
 import 'package:frontend/models/message.dart';
 import 'package:frontend/models/web_socket_message.dart';
 import 'package:frontend/services/user_services.dart';
 import 'package:frontend/services/web_socket_service.dart';
+import 'package:frontend/services/webrtc_service.dart';
+import 'package:get/get.dart';
 
-class ChatService {
-  ChatService._singleton();
-  static final ChatService _instance = ChatService._singleton();
+class ChatService extends GetxController {
+  static final ChatService _instance = Get.put(ChatService());
   static ChatService get I => _instance;
 
-  final _messageStreamController = StreamController<Message>.broadcast();
-  Stream<Message> get messageStream => _messageStreamController.stream;
+  final RxList<Message> messages = RxList();
 
-  final List<Message> _messages = [];
-  List<Message> get messages => _messages.reversed.toList();
+  Future<bool> send(String message) async {
+    if (!WebRTCService.I.isConnected.value) return false;
 
-  void send(String message) async {
-    _messages.add(Message(content: message, isMe: true));
+    message = message.trim();
+    if (message.isEmpty) return false;
+
+    messages.add(Message(content: message, isMe: true));
 
     // Send message to socket
     final user = await UserService.I.getCurrentUser();
@@ -26,6 +26,7 @@ class ChatService {
       avatar: user?.profile.avatar,
     );
     WebSocketService.I.sendMessage(webSocketMessage);
+    return true;
   }
 
   void onNewMessage(WebSocketMessage message) {
@@ -38,11 +39,10 @@ class ChatService {
       isMe: false,
     );
 
-    _messages.add(chatMessage);
-    _messageStreamController.add(chatMessage);
+    messages.add(chatMessage);
   }
 
   void clearMessages() {
-    _messages.clear();
+    messages.clear();
   }
 }

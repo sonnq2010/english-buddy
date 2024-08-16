@@ -12,18 +12,18 @@ class ControlButtons extends StatefulWidget {
 }
 
 class _ControlButtonsState extends State<ControlButtons> {
-  late bool isStarted;
+  late bool _isStarted;
 
   @override
   void initState() {
     super.initState();
-    isStarted = WebRTCService.I.isStarted;
+    _isStarted = WebRTCService.I.isStarted;
   }
 
   void start() {
     WebRTCService.I.start().then((value) {
       setState(() {
-        isStarted = true;
+        _isStarted = true;
       });
     });
   }
@@ -35,7 +35,7 @@ class _ControlButtonsState extends State<ControlButtons> {
   void stop() {
     WebRTCService.I.stop();
     setState(() {
-      isStarted = false;
+      _isStarted = false;
     });
   }
 
@@ -43,9 +43,11 @@ class _ControlButtonsState extends State<ControlButtons> {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        isStarted ? SkipButton(onPressed: skip) : StartButton(onPressed: start),
+        _isStarted
+            ? SkipButton(onPressed: skip)
+            : StartButton(onPressed: start),
         const SizedBox(width: 16),
-        StopButton(isDisabled: !isStarted, onPressed: stop),
+        StopButton(isDisabled: !_isStarted, onPressed: stop),
       ],
     );
   }

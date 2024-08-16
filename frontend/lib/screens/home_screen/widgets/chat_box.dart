@@ -1,10 +1,9 @@
-import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:frontend/models/message.dart';
 import 'package:frontend/services/chat_service.dart';
-import 'package:frontend/services/webrtc_service.dart';
+import 'package:get/get.dart';
 
 class ChatBox extends StatefulWidget {
   const ChatBox({super.key, this.forBottomSheet = false});
@@ -16,27 +15,14 @@ class ChatBox extends StatefulWidget {
 }
 
 class _ChatBoxState extends State<ChatBox> {
-  final _messages = <Message>[];
-
   final _focusNode = FocusNode();
   final _textController = TextEditingController();
   final _scrollController = ScrollController();
 
-  late StreamSubscription<Message> messageStreamSubcription;
-
-  @override
-  void initState() {
-    super.initState();
-    _messages.addAll(ChatService.I.messages);
-    messageStreamSubcription = ChatService.I.messageStream.listen((message) {
-      _messages.insert(0, message);
-      setState(() {});
-    });
-  }
-
   @override
   void dispose() {
     super.dispose();
+    _focusNode.dispose();
     _textController.dispose();
     _scrollController.dispose();
   }
@@ -57,26 +43,28 @@ class _ChatBoxState extends State<ChatBox> {
 
   Widget _buildMessageList() {
     return Expanded(
-      child: ListView.separated(
-        reverse: true,
-        padding: const EdgeInsets.all(16),
-        controller: _scrollController,
-        itemCount: _messages.length,
-        itemBuilder: (context, index) {
-          final message = _messages[index];
-          final avatar = _buildAvatar(message.avatar);
-          final content = _buildContent(message.content);
+      child: Obx(() {
+        return ListView.separated(
+          reverse: true,
+          padding: const EdgeInsets.all(16),
+          controller: _scrollController,
+          itemCount: ChatService.I.messages.length,
+          itemBuilder: (context, index) {
+            final message = ChatService.I.messages.reversed.toList()[index];
+            final avatar = _buildAvatar(message.avatar);
+            final content = _buildContent(message.content);
 
-          return _getLayoutForMessage(
-            message,
-            avatar: avatar,
-            content: content,
-          );
-        },
-        separatorBuilder: (context, index) {
-          return const SizedBox(height: 16);
-        },
-      ),
+            return _getLayoutForMessage(
+              message,
+              avatar: avatar,
+              content: content,
+            );
+          },
+          separatorBuilder: (context, index) {
+            return const SizedBox(height: 16);
+          },
+        );
+      }),
     );
   }
 
@@ -148,20 +136,11 @@ class _ChatBoxState extends State<ChatBox> {
   }
 
   void _submit(String message) async {
-    if (!WebRTCService.I.isConnected) return;
+    final ok = await ChatService.I.send(message);
+    if (!ok) return;
 
-    message = message.trim();
-    if (message.isEmpty) return;
-
-    _textController.clear();
     _focusNode.requestFocus();
-    setState(() {
-      _messages.insert(
-        0,
-        Message(content: message, isMe: true),
-      );
-    });
-    ChatService.I.send(message);
+    _textController.clear();
     _scrollController.jumpTo(0);
   }
 }

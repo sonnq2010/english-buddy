@@ -6,12 +6,12 @@ import 'package:frontend/models/web_socket_message.dart';
 import 'package:frontend/services/cc_service.dart';
 import 'package:frontend/services/web_socket_service.dart';
 import 'package:frontend/services/webrtc_service.dart';
+import 'package:get/get.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 
-class SpeechRecognitor {
-  SpeechRecognitor._();
-  static final SpeechRecognitor _instance = SpeechRecognitor._();
+class SpeechRecognitor extends GetxController {
+  static final SpeechRecognitor _instance = Get.put(SpeechRecognitor());
   static SpeechRecognitor get I => _instance;
 
   final _speech = stt.SpeechToText();
@@ -32,7 +32,7 @@ class SpeechRecognitor {
 
     _timer = Timer.periodic(const Duration(seconds: 2), (timer) async {
       if (!_isStarted) return;
-      if (!WebRTCService.I.isConnected) return;
+      if (!WebRTCService.I.isConnected.value) return;
 
       if (_speech.isNotListening) {
         try {
@@ -44,7 +44,8 @@ class SpeechRecognitor {
     });
   }
 
-  void dispose() {
+  @override
+  void onClose() {
     _speech.cancel();
     _timer.cancel();
   }
@@ -82,7 +83,7 @@ class SpeechRecognitor {
 
   void _onResult(SpeechRecognitionResult recognitionResult) {
     debugPrint('received result');
-    if (!WebRTCService.I.isConnected) return;
+    if (!WebRTCService.I.isConnected.value) return;
 
     final result = recognitionResult.recognizedWords;
     debugPrint('result: $result');

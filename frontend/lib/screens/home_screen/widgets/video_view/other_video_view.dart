@@ -33,7 +33,10 @@ class OtherVideoView extends StatelessWidget {
           top: 8,
           right: 8,
           child: Obx(() {
-            if (!WebRTCService.I.isConnected) return const SizedBox.shrink();
+            if (!WebRTCService.I.isConnected.value) {
+              return const SizedBox.shrink();
+            }
+
             return IconButton(
               style: IconButton.styleFrom(
                 backgroundColor: Colors.deepPurpleAccent.withOpacity(0.2),
@@ -55,45 +58,21 @@ class OtherVideoView extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // Flexible(
-              //   child: ObxValue(
-              //     (cc) {
-              //       if (cc.value.isEmpty) return const SizedBox();
-
-              //       return Container(
-              //         padding: const EdgeInsets.all(8),
-              //         color: Colors.black.withOpacity(0.45),
-              //         child: Text(
-              //           cc.value,
-              //           textAlign: TextAlign.center,
-              //           style: const TextStyle(color: Colors.white),
-              //         ),
-              //       );
-              //     },
-              //     CCService.I.cc,
-              //   ),
-              // ),
               Flexible(
-                child: StreamBuilder(
-                  stream: CCService.I.ccStream,
-                  builder: (context, snapshot) {
-                    if (!snapshot.hasData) return const SizedBox.shrink();
-                    if (snapshot.hasError) return const SizedBox.shrink();
+                child: Obx(() {
+                  final ccString = CCService.I.cc.value;
+                  if (ccString.isEmpty) return const SizedBox.shrink();
 
-                    final ccString = snapshot.data ?? '';
-                    if (ccString.isEmpty) return const SizedBox.shrink();
-
-                    return Container(
-                      padding: const EdgeInsets.all(8),
-                      color: Colors.black.withOpacity(0.45),
-                      child: Text(
-                        ccString,
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(color: Colors.white),
-                      ),
-                    );
-                  },
-                ),
+                  return Container(
+                    padding: const EdgeInsets.all(8),
+                    color: Colors.black.withOpacity(0.45),
+                    child: Text(
+                      ccString,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                  );
+                }),
               ),
             ],
           ),

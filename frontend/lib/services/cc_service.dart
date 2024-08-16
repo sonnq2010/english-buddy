@@ -1,26 +1,20 @@
-import 'dart:async';
-
 import 'package:frontend/models/web_socket_message.dart';
+import 'package:get/get.dart';
 
-class CCService {
-  CCService._();
-  static final CCService _instance = CCService._();
+class CCService extends GetxController {
+  static final CCService _instance = Get.put(CCService());
   static CCService get I => _instance;
 
-  final _ccStreamController = StreamController<String>.broadcast();
-  Stream<String> get ccStream => _ccStreamController.stream;
-
-  String _lastCC = '';
+  final cc = RxString('');
 
   void handleRemoteCC(WebSocketMessage message) {
     final ccString = message.data.cc ?? '';
-    if (ccString == _lastCC) return;
+    if (ccString == cc.value) return;
 
-    _ccStreamController.add(ccString);
-    _lastCC = ccString;
+    cc.value = ccString;
   }
 
   void clearCC() {
-    _ccStreamController.add('');
+    cc.value = '';
   }
 }
