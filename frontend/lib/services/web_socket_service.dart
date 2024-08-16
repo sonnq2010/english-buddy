@@ -7,11 +7,11 @@ import 'package:frontend/models/web_socket_message.dart';
 import 'package:frontend/services/cc_service.dart';
 import 'package:frontend/services/chat_service.dart';
 import 'package:frontend/services/webrtc_service.dart';
+import 'package:get/get.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
-class WebSocketService {
-  WebSocketService._singleton();
-  static final _instance = WebSocketService._singleton();
+class WebSocketService extends GetxController {
+  static final _instance = Get.put(WebSocketService());
   static WebSocketService get I => _instance;
 
   late WebSocketChannel _channel;
@@ -31,8 +31,10 @@ class WebSocketService {
     });
   }
 
-  Future<void> dispose() async {
+  @override
+  void onClose() {
     _channel.sink.close();
+    super.onClose();
   }
 
   void sendMessage(WebSocketMessage message) {

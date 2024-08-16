@@ -10,7 +10,7 @@ class ReportService {
   final _repo = const ReportUserRepo();
 
   void reportUser({required String? reason}) async {
-    if (!WebRTCService.I.isConnected) return;
+    if (!WebRTCService.I.isConnected.value) return;
 
     reason = reason?.trim();
     if (reason == null) return;
