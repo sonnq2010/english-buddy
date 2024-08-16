@@ -7,7 +7,10 @@ Parameters:
     Default: english-buddy-key-pair
   AmiId:
     Type: String
-    Default: ami-0be48b687295f8bd6
+    Default: ami-0a380a71f09965e71
+  AmiIdTurn:
+    Type: String
+    Default: ami-082cda1600b12c731
   CertificateArn:
     Type: String
     Default: arn:aws:acm:ap-southeast-1:471112932648:certificate/fb08cdb5-b6fb-48b6-8ed6-4f5e523ab97a
@@ -243,7 +246,7 @@ Resources:
     Properties: 
       LaunchTemplateName: turn-launch-template
       LaunchTemplateData:
-        ImageId: !Ref AmiId
+        ImageId: !Ref AmiIdTurn
         InstanceType: t2.micro
         SecurityGroupIds:
           - !Ref EC2SecurityGroup
