@@ -1,6 +1,4 @@
-# da-cntt-2
-Dự án CNTT 2 - TDTU
-
+# english-buddy
 Flutter version: 3.19.0
 
 Dart version: 3.3.0
