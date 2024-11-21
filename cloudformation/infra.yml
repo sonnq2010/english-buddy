@@ -1,0 +1,518 @@
+Parameters:
+  ProjectName:
+    Type: String
+    Default: english-buddy
+  KeyPair:
+    Type: String
+    Default: english-buddy-key-pair
+  AmiId:
+    Type: String
+    Default: ami-0a380a71f09965e71
+  AmiIdTurn:
+    Type: String
+    Default: ami-082cda1600b12c731
+  CertificateArn:
+    Type: String
+    Default: arn:aws:acm:ap-southeast-1:471112932648:certificate/fb08cdb5-b6fb-48b6-8ed6-4f5e523ab97a
+
+Resources:
+  VPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 10.0.0.0/16
+      EnableDnsHostnames: true
+      EnableDnsSupport: true
+      Tags:
+        - Key: Name
+          Value: !Ref ProjectName
+
+  InternetGateway:
+    Type: AWS::EC2::InternetGateway
+    Properties:
+      Tags:
+        - Key: Name
+          Value: !Ref ProjectName
+
+  VPCGatewayAttachment:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      VpcId: !Ref VPC
+      InternetGatewayId: !Ref InternetGateway
+
+  PublicRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref VPC
+      Tags:
+        - Key: Name
+          Value: !Ref ProjectName
+
+  PublicRoute:
+    Type: AWS::EC2::Route
+    DependsOn: VPCGatewayAttachment
+    Properties:
+      RouteTableId: !Ref PublicRouteTable
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref InternetGateway
+
+  SignalingPublicSubnet1A:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      CidrBlock: 10.0.1.0/24
+      AvailabilityZone: ap-southeast-1a
+      Tags:
+        - Key: Name
+          Value: !Join ["-", [!Ref ProjectName, "signaling-subnet"]]
+  
+  SignalingPublicSubnet1B:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      CidrBlock: 10.0.2.0/24
+      AvailabilityZone: ap-southeast-1b
+      Tags:
+        - Key: Name
+          Value: !Join ["-", [!Ref ProjectName, "signaling-subnet"]]
+
+  TurnPublicSubnet1A:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      CidrBlock: 10.0.3.0/24
+      AvailabilityZone: ap-southeast-1a
+      Tags:
+        - Key: Name
+          Value: !Join ["-", [!Ref ProjectName, "turn-subnet"]]
+  
+  TurnPublicSubnet1B:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      CidrBlock: 10.0.4.0/24
+      AvailabilityZone: ap-southeast-1b
+      Tags:
+        - Key: Name
+          Value: !Join ["-", [!Ref ProjectName, "turn-subnet"]]
+
+  ALBSignalingPublicSubnet1A:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      CidrBlock: 10.0.5.0/24
+      AvailabilityZone: ap-southeast-1a
+      Tags:
+        - Key: Name
+          Value: !Join ["-", [!Ref ProjectName, "alb-subnet"]]
+  
+  ALBSignalingPublicSubnet1B:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      CidrBlock: 10.0.6.0/24
+      AvailabilityZone: ap-southeast-1b
+      Tags:
+        - Key: Name
+          Value: !Join ["-", [!Ref ProjectName, "alb-subnet"]]
+
+  ALBTurnPublicSubnet1A:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      CidrBlock: 10.0.7.0/24
+      AvailabilityZone: ap-southeast-1a
+      Tags:
+        - Key: Name
+          Value: !Join ["-", [!Ref ProjectName, "alb-subnet"]]
+  
+  ALBTurnPublicSubnet1B:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      CidrBlock: 10.0.8.0/24
+      AvailabilityZone: ap-southeast-1b
+      Tags:
+        - Key: Name
+          Value: !Join ["-", [!Ref ProjectName, "alb-subnet"]]
+
+  SubnetRouteTableAssociationSignaling1A:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref SignalingPublicSubnet1A
+      RouteTableId: !Ref PublicRouteTable
+
+  SubnetRouteTableAssociationSignaling1B:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref SignalingPublicSubnet1B
+      RouteTableId: !Ref PublicRouteTable
+
+  SubnetRouteTableAssociationTurn1A:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref TurnPublicSubnet1A
+      RouteTableId: !Ref PublicRouteTable
+
+  SubnetRouteTableAssociationTurn1B:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref TurnPublicSubnet1B
+      RouteTableId: !Ref PublicRouteTable
+
+  SubnetRouteTableAssociationALBSignaling1A:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref ALBSignalingPublicSubnet1A
+      RouteTableId: !Ref PublicRouteTable
+
+  SubnetRouteTableAssociationALBSignaling1B:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref ALBSignalingPublicSubnet1B
+      RouteTableId: !Ref PublicRouteTable
+
+  SubnetRouteTableAssociationALBTurn1A:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref ALBTurnPublicSubnet1A
+      RouteTableId: !Ref PublicRouteTable
+
+  SubnetRouteTableAssociationALBTurn1B:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref ALBTurnPublicSubnet1B
+      RouteTableId: !Ref PublicRouteTable
+
+  EC2SecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Enable HTTP and HTTPS access
+      VpcId: !Ref VPC
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 443
+          ToPort: 443
+          CidrIp: 0.0.0.0/0
+      Tags:
+        - Key: Name
+          Value: !Ref ProjectName
+
+  SignalingLaunchTemplate:
+    Type: AWS::EC2::LaunchTemplate
+    Properties: 
+      LaunchTemplateName: signaling-launch-template
+      LaunchTemplateData:
+        BlockDeviceMappings:
+          - DeviceName: /dev/xvda
+            Ebs:
+              VolumeSize: 8 # Size in GB
+              VolumeType: gp3
+        ImageId: !Ref AmiId
+        InstanceType: t2.micro
+        SecurityGroupIds:
+          - !Ref EC2SecurityGroup
+
+  SignalingASG:
+    Type: AWS::AutoScaling::AutoScalingGroup
+    Properties:
+      LaunchTemplate:
+        LaunchTemplateId: !Ref SignalingLaunchTemplate
+        Version: !GetAtt SignalingLaunchTemplate.LatestVersionNumber
+      MaxSize: '2'
+      MinSize: '1'
+      VPCZoneIdentifier: 
+        - !Ref SignalingPublicSubnet1A
+        - !Ref SignalingPublicSubnet1B
+      TargetGroupARNs:
+        - !Ref SignalingTargetGroup
+  
+  SignalingScalePolicy:
+    Type: AWS::AutoScaling::ScalingPolicy
+    Properties:
+      AutoScalingGroupName: !Ref SignalingASG
+      PolicyType: TargetTrackingScaling
+      TargetTrackingConfiguration:
+        PredefinedMetricSpecification:
+          PredefinedMetricType: ASGAverageCPUUtilization
+        TargetValue: 45.0 # Adjust the target value based on your needs
+
+  # ASG Turn server
+  TurnLaunchTemplate:
+    Type: AWS::EC2::LaunchTemplate
+    Properties: 
+      LaunchTemplateName: turn-launch-template
+      LaunchTemplateData:
+        ImageId: !Ref AmiIdTurn
+        InstanceType: t2.micro
+        SecurityGroupIds:
+          - !Ref EC2SecurityGroup
+
+  TurnASG:
+    Type: AWS::AutoScaling::AutoScalingGroup
+    Properties:
+      LaunchTemplate:
+        LaunchTemplateId: !Ref TurnLaunchTemplate
+        Version: !GetAtt TurnLaunchTemplate.LatestVersionNumber
+      MaxSize: '2'
+      MinSize: '1'
+      VPCZoneIdentifier: 
+        - !Ref TurnPublicSubnet1A
+        - !Ref TurnPublicSubnet1B
+      TargetGroupARNs:
+        - !Ref TCP443TargetGroup
+        - !Ref TCP3478TargetGroup
+  
+  TurnScalePolicy:
+    Type: AWS::AutoScaling::ScalingPolicy
+    Properties:
+      AutoScalingGroupName: !Ref TurnASG
+      PolicyType: TargetTrackingScaling
+      TargetTrackingConfiguration:
+        PredefinedMetricSpecification:
+          PredefinedMetricType: ASGAverageCPUUtilization
+        TargetValue: 45.0 # Adjust the target value based on your needs
+
+# ALB 
+  # ALB
+  SignalingLoadBalancer:
+    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
+    Properties:
+      Subnets:
+        - !Ref ALBSignalingPublicSubnet1A
+        - !Ref ALBSignalingPublicSubnet1B
+      SecurityGroups:
+        - !Ref EC2SecurityGroup
+
+  # Target Group
+  SignalingTargetGroup:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      VpcId: !Ref VPC
+      Port: 8080
+      Protocol: HTTP
+      HealthCheckPath: /health
+      HealthCheckPort: 8080
+      HealthCheckProtocol: HTTP
+      TargetType: instance
+      
+
+  # Listener for HTTP
+  SignalingHTTPListener:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      DefaultActions:
+        - Type: forward
+          TargetGroupArn: !Ref SignalingTargetGroup
+      LoadBalancerArn: !Ref SignalingLoadBalancer
+      Port: 80
+      Protocol: HTTP
+
+  # Listener for HTTPS
+  SignalingHTTPSListener:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      DefaultActions:
+        - Type: forward
+          TargetGroupArn: !Ref SignalingTargetGroup
+      LoadBalancerArn: !Ref SignalingLoadBalancer
+      Port: 443
+      Protocol: HTTPS
+      Certificates:
+        - CertificateArn: !Ref CertificateArn
+
+  # Security Group for the Load Balancer
+  LoadBalancerSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Security Group for NLB
+      VpcId: !Ref VPC
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 443
+          ToPort: 443
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: udp
+          FromPort: 443
+          ToPort: 443
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 3478
+          ToPort: 3478
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: udp
+          FromPort: 3478
+          ToPort: 3478
+          CidrIp: 0.0.0.0/0
+
+  # Network Load Balancer
+  NetworkLoadBalancer:
+    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
+    Properties:
+      Name: turn-nlb
+      Type: network
+      Scheme: internet-facing
+      Subnets:
+        - !Ref ALBTurnPublicSubnet1A
+        - !Ref ALBTurnPublicSubnet1B
+      SecurityGroups:
+        - Ref: LoadBalancerSecurityGroup
+
+  # Target Group for TCP on port 443
+  TCP443TargetGroup:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      Name: tcp-443-target-group
+      Port: 443
+      Protocol: TCP_UDP
+      VpcId: !Ref VPC
+      HealthCheckProtocol: HTTP
+      HealthCheckPort: 80
+      TargetType: instance
+
+
+  # Target Group for TCP on port 3478
+  TCP3478TargetGroup:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      Name: tcp-3478-target-group
+      Port: 3478
+      Protocol: TCP_UDP
+      VpcId: !Ref VPC
+      HealthCheckProtocol: HTTP
+      HealthCheckPort: 80
+      TargetType: instance
+
+  # Listener on port 443 with TCP protocol and certificate
+  HTTPSListener:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      DefaultActions:
+        - Type: forward
+          TargetGroupArn: !Ref TCP443TargetGroup
+      LoadBalancerArn: !Ref NetworkLoadBalancer
+      Port: 443
+      Protocol: TCP_UDP
+
+  # Listener on port 3478 with TCP protocol
+  TCPListener3478:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      DefaultActions:
+        - Type: forward
+          TargetGroupArn: !Ref TCP3478TargetGroup
+      LoadBalancerArn: !Ref NetworkLoadBalancer
+      Port: 3478
+      Protocol: TCP_UDP
+  
+
+  # RDS
+  DBPrivateSubnet:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      CidrBlock: 10.0.9.0/24
+      AvailabilityZone: ap-southeast-1a
+      Tags:
+        - Key: Name
+          Value: !Join ["-", [!Ref ProjectName, "db-private-subnet"]]
+
+  DBPrivateSubnet1:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      CidrBlock: 10.0.10.0/24
+      AvailabilityZone: ap-southeast-1b
+      Tags:
+        - Key: Name
+          Value: !Join ["-", [!Ref ProjectName, "db-private-subnet"]]
+
+  MyDBSubnetGroup:
+    Type: AWS::RDS::DBSubnetGroup
+    Properties: 
+      DBSubnetGroupDescription: "Subnet group for RDS instance"
+      SubnetIds: 
+        - !Ref DBPrivateSubnet
+        - !Ref DBPrivateSubnet1
+
+  MyDBSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties: 
+      GroupDescription: "Security group for RDS instance"
+      VpcId: !Ref VPC
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 5432
+          ToPort: 5432
+          SourceSecurityGroupId: !Ref EC2SecurityGroup
+
+  MyRDSInstance:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      DBInstanceIdentifier: my-rds-instance
+      AllocatedStorage: 20
+      DBInstanceClass: db.t4g.micro
+      Engine: postgres
+      EngineVersion: "16.3"
+      MasterUsername: englishbuddy
+      MasterUserPassword: Englishbuddy123
+      DBSubnetGroupName: !Ref MyDBSubnetGroup
+      VPCSecurityGroups: 
+        - !Ref MyDBSecurityGroup
+      MultiAZ: false
+      StorageType: gp2
+      BackupRetentionPeriod: 7
+      PubliclyAccessible: true
+
+# Elastic cache
+  CachePrivateSubnet:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      CidrBlock: 10.0.11.0/24
+      AvailabilityZone: ap-southeast-1a
+      Tags:
+        - Key: Name
+          Value: !Join ["-", [!Ref ProjectName, "cache-private-subnet"]]
+  
+  CachePrivateSubnet1:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      CidrBlock: 10.0.12.0/24
+      AvailabilityZone: ap-southeast-1b
+      Tags:
+        - Key: Name
+          Value: !Join ["-", [!Ref ProjectName, "cache-private-subnet"]]
+  
+  MyCacheSubnetGroup:
+    Type: AWS::ElastiCache::SubnetGroup
+    Properties:
+      Description: "Subnet group for ElastiCache cluster"
+      SubnetIds:
+        - !Ref CachePrivateSubnet
+        - !Ref CachePrivateSubnet1
+
+  MyCacheSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: "Security group for ElastiCache cluster"
+      VpcId: !Ref VPC
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 6379
+          ToPort: 6379
+          SourceSecurityGroupId: !Ref EC2SecurityGroup
+
+  MyCacheCluster:
+    Type: AWS::ElastiCache::CacheCluster
+    Properties:
+      Engine: redis
+      CacheNodeType: cache.t2.micro
+      NumCacheNodes: 1
+      VpcSecurityGroupIds:
+        - !Ref MyCacheSecurityGroup
+      CacheSubnetGroupName: !Ref MyCacheSubnetGroup
